@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'bun:test'
-import { render, screen, fireEvent } from '@testing-library/react'
+import { render, fireEvent } from '@testing-library/react'
 import { EmailResult } from '@/components/dashboard/email-result'
 import type { GeneratedEmail } from '@/types'
 
@@ -17,29 +17,29 @@ const mockEmail: GeneratedEmail = {
 
 describe('EmailResult', () => {
   it('renders subject and tone badge', () => {
-    render(<EmailResult email={mockEmail} />)
-    expect(screen.getByText('Project Update')).toBeDefined()
-    expect(screen.getByText('Professional')).toBeDefined()
+    const { getByText } = render(<EmailResult email={mockEmail} />)
+    expect(getByText('Project Update')).toBeDefined()
+    expect(getByText('Professional')).toBeDefined()
   })
 
   it('renders email content', () => {
-    render(<EmailResult email={mockEmail} />)
-    expect(screen.getAllByText(/project update/i).length).toBeGreaterThan(0)
+    const { getAllByText } = render(<EmailResult email={mockEmail} />)
+    expect(getAllByText(/project update/i).length).toBeGreaterThan(0)
   })
 
   it('shows delete button when onDelete provided', () => {
-    render(<EmailResult email={mockEmail} onDelete={() => {}} />)
-    expect(screen.getByRole('button', { name: /delete/i })).toBeDefined()
+    const { getByRole } = render(<EmailResult email={mockEmail} onDelete={() => {}} />)
+    expect(getByRole('button', { name: /delete/i })).toBeDefined()
   })
 
   it('does not show delete button when onDelete not provided', () => {
-    render(<EmailResult email={mockEmail} />)
-    expect(screen.queryByRole('button', { name: /delete/i })).toBeNull()
+    const { queryByRole } = render(<EmailResult email={mockEmail} />)
+    expect(queryByRole('button', { name: /delete/i })).toBeNull()
   })
 
   it('calls onDelete with email id when delete clicked', () => {
     let deletedId: string | null = null
-    render(
+    const { getByRole } = render(
       <EmailResult
         email={mockEmail}
         onDelete={(id) => {
@@ -47,7 +47,7 @@ describe('EmailResult', () => {
         }}
       />
     )
-    fireEvent.click(screen.getByRole('button', { name: /delete/i }))
+    fireEvent.click(getByRole('button', { name: /delete/i }))
     expect(deletedId as unknown as string).toBe('test-id')
   })
 })
