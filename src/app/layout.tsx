@@ -1,8 +1,13 @@
 import type { Metadata } from 'next'
 import { Orbitron, JetBrains_Mono, Share_Tech_Mono } from 'next/font/google'
+import { cookies } from 'next/headers'
 import { NextIntlClientProvider } from 'next-intl'
-import { getLocale, getMessages } from 'next-intl/server'
 import './globals.css'
+import enMessages from '../../messages/en.json'
+import ruMessages from '../../messages/ru.json'
+
+const MESSAGES = { en: enMessages, ru: ruMessages } as const
+type Locale = keyof typeof MESSAGES
 
 const orbitron = Orbitron({
   subsets: ['latin'],
@@ -60,8 +65,9 @@ export const metadata: Metadata = {
 type RootLayoutProps = { children: React.ReactNode }
 
 export default async function RootLayout({ children }: RootLayoutProps) {
-  const locale = await getLocale()
-  const messages = await getMessages()
+  const cookieStore = await cookies()
+  const raw = cookieStore.get('NEXT_LOCALE')?.value ?? 'en'
+  const locale: Locale = raw in MESSAGES ? (raw as Locale) : 'en'
 
   return (
     <html lang={locale} suppressHydrationWarning>
@@ -71,7 +77,7 @@ export default async function RootLayout({ children }: RootLayoutProps) {
         <a href="#main-content" className="skip-link">
           Skip to main content
         </a>
-        <NextIntlClientProvider locale={locale} messages={messages}>
+        <NextIntlClientProvider locale={locale} messages={MESSAGES[locale]}>
           {children}
         </NextIntlClientProvider>
       </body>
