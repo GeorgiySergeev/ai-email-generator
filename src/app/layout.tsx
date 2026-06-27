@@ -1,8 +1,13 @@
 import type { Metadata } from 'next'
 import { Orbitron, JetBrains_Mono, Share_Tech_Mono } from 'next/font/google'
-import { NextIntlClientProvider } from 'next-intl'
-import { getLocale, getMessages } from 'next-intl/server'
+import { cookies } from 'next/headers'
+import { I18nProvider } from '@/components/shared/i18n-provider'
 import './globals.css'
+import enMessages from '../../messages/en.json'
+import ruMessages from '../../messages/ru.json'
+
+const MESSAGES = { en: enMessages, ru: ruMessages } as const
+type Locale = keyof typeof MESSAGES
 
 const orbitron = Orbitron({
   subsets: ['latin'],
@@ -60,20 +65,22 @@ export const metadata: Metadata = {
 type RootLayoutProps = { children: React.ReactNode }
 
 export default async function RootLayout({ children }: RootLayoutProps) {
-  const locale = await getLocale()
-  const messages = await getMessages()
+  const cookieStore = await cookies()
+  const raw = cookieStore.get('NEXT_LOCALE')?.value ?? 'en'
+  const locale: Locale = raw in MESSAGES ? (raw as Locale) : 'en'
 
   return (
     <html lang={locale} suppressHydrationWarning>
       <body
         className={`${orbitron.variable} ${jetbrainsMono.variable} ${shareTechMono.variable} font-mono bg-background text-foreground antialiased`}
+        suppressHydrationWarning
       >
         <a href="#main-content" className="skip-link">
           Skip to main content
         </a>
-        <NextIntlClientProvider locale={locale} messages={messages}>
+        <I18nProvider locale={locale} messages={MESSAGES[locale]}>
           {children}
-        </NextIntlClientProvider>
+        </I18nProvider>
       </body>
     </html>
   )
