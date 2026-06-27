@@ -16,8 +16,25 @@ export type Database = {
           created_at: string
           updated_at: string
         }
-        Insert: Omit<Database['public']['Tables']['profiles']['Row'], 'created_at' | 'updated_at'>
-        Update: Partial<Database['public']['Tables']['profiles']['Insert']>
+        Insert: {
+          id: string
+          email: string
+          full_name?: string | null
+          avatar_url?: string | null
+          plan?: 'free' | 'pro' | 'enterprise'
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          email?: string
+          full_name?: string | null
+          avatar_url?: string | null
+          plan?: 'free' | 'pro' | 'enterprise'
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: []
       }
       generated_emails: {
         Row: {
@@ -31,9 +48,34 @@ export type Database = {
           tokens_used: number | null
           created_at: string
         }
-        Insert: Omit<Database['public']['Tables']['generated_emails']['Row'], 'id' | 'created_at'>
-        Update: Partial<Database['public']['Tables']['generated_emails']['Insert']>
+        Insert: {
+          id?: string
+          user_id: string
+          subject: string
+          tone: 'professional' | 'casual' | 'formal' | 'friendly' | 'persuasive'
+          length: 'short' | 'medium' | 'long'
+          content: string
+          model_used?: string
+          tokens_used?: number | null
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          subject?: string
+          tone?: 'professional' | 'casual' | 'formal' | 'friendly' | 'persuasive'
+          length?: 'short' | 'medium' | 'long'
+          content?: string
+          model_used?: string
+          tokens_used?: number | null
+          created_at?: string
+        }
+        Relationships: []
       }
     }
+    Views: Record<never, never>
+    Functions: Record<never, never>
+    Enums: Record<never, never>
+    CompositeTypes: Record<never, never>
   }
 }
