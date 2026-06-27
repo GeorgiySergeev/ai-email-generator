@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import { Orbitron, JetBrains_Mono, Share_Tech_Mono } from 'next/font/google'
 import { cookies } from 'next/headers'
-import { NextIntlClientProvider } from 'next-intl'
+import { I18nProvider } from '@/components/shared/i18n-provider'
 import './globals.css'
 import enMessages from '../../messages/en.json'
 import ruMessages from '../../messages/ru.json'
@@ -77,9 +77,9 @@ export default async function RootLayout({ children }: RootLayoutProps) {
         <a href="#main-content" className="skip-link">
           Skip to main content
         </a>
-        <NextIntlClientProvider locale={locale} messages={MESSAGES[locale]}>
+        <I18nProvider locale={locale} messages={MESSAGES[locale]}>
           {children}
-        </NextIntlClientProvider>
+        </I18nProvider>
       </body>
     </html>
   )
