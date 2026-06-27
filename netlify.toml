@@ -1,0 +1,12 @@
+[build]
+  command = "bun run build"
+  publish = ".next"
+
+[build.environment]
+  NODE_VERSION = "20"
+  NEXT_PUBLIC_APP_URL = "https://ai-email-aligator.netlify.app"
+  NEXT_PUBLIC_APP_NAME = "AI Email Generator"
+  AI_PROVIDER = "mock"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"

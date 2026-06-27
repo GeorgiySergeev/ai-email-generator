@@ -6,6 +6,7 @@ COPY package.json bun.lock ./
 RUN bun install --frozen-lockfile
 
 COPY . .
+ENV BUILD_STANDALONE=true
 RUN bun run build
 
 # ---- Production Stage ----
