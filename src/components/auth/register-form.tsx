@@ -17,11 +17,13 @@ import {
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { FormError } from './form-error'
-import { Loader2 } from 'lucide-react'
+import { Loader2, Eye, EyeOff } from 'lucide-react'
 
 export const RegisterForm = () => {
   const [serverError, setServerError] = useState<string | null>(null)
   const [isPending, startTransition] = useTransition()
+  const [showPassword, setShowPassword] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
 
   const form = useForm<RegisterInput>({
     resolver: zodResolver(RegisterSchema),
@@ -90,13 +92,20 @@ export const RegisterForm = () => {
                     &gt;
                   </span>
                   <Input
-                    type="password"
-                    placeholder="Min 8 chars, 1 uppercase, 1 number"
+                    type={showPassword ? 'text' : 'password'}
                     autoComplete="new-password"
                     disabled={isPending}
-                    className="pl-8"
+                    className="pl-8 pr-10"
                     {...field}
                   />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                    tabIndex={-1}
+                  >
+                    {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                  </button>
                 </div>
               </FormControl>
               <div className="font-mono text-xs text-muted-foreground mt-1">{'// min 8 chars'}</div>
@@ -119,13 +128,24 @@ export const RegisterForm = () => {
                     &gt;
                   </span>
                   <Input
-                    type="password"
-                    placeholder="Repeat password"
+                    type={showConfirmPassword ? 'text' : 'password'}
                     autoComplete="new-password"
                     disabled={isPending}
-                    className="pl-8"
+                    className="pl-8 pr-10"
                     {...field}
                   />
+                  <button
+                    type="button"
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                    tabIndex={-1}
+                  >
+                    {showConfirmPassword ? (
+                      <EyeOff className="h-4 w-4" />
+                    ) : (
+                      <Eye className="h-4 w-4" />
+                    )}
+                  </button>
                 </div>
               </FormControl>
               <FormMessage />

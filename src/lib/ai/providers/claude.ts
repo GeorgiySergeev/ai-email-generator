@@ -36,7 +36,20 @@ Include: Subject line, greeting, body paragraphs, and signature placeholder.`
 const getClient = (): Anthropic => {
   const apiKey = process.env.ANTHROPIC_API_KEY
   if (!apiKey) throw new Error('ANTHROPIC_API_KEY environment variable is not set')
-  return new Anthropic({ apiKey })
+  return new Anthropic({
+    apiKey,
+    fetch: (url, init) => {
+      // Fix Next.js Undici premature close bug by disabling keepalive and forcing identity encoding
+      return fetch(url, {
+        ...init,
+        keepalive: false,
+        headers: {
+          ...init?.headers,
+          'accept-encoding': 'identity',
+        },
+      })
+    },
+  })
 }
 
 export const claudeAIProvider: AIProvider = {

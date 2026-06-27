@@ -73,6 +73,7 @@ export default async function RootLayout({ children }: RootLayoutProps) {
     <html lang={locale} suppressHydrationWarning>
       <body
         className={`${orbitron.variable} ${jetbrainsMono.variable} ${shareTechMono.variable} font-mono bg-background text-foreground antialiased`}
+        suppressHydrationWarning
       >
         <a href="#main-content" className="skip-link">
           Skip to main content

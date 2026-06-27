@@ -12,6 +12,14 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue)](https://www.typescriptlang.org/)
 [![Next.js](https://img.shields.io/badge/Next.js-15-black)](https://nextjs.org/)
 
+## Created demo@example.com (free)
+
+## Created pro@example.com (pro)
+
+## Created email: Quarterly report
+
+## Created email: Meeting invitation
+
 <!-- TODO: Replace with real URLs after first deploy -->
 
 **Live URL:** [https://your-project.vercel.app](https://your-project.vercel.app)  
