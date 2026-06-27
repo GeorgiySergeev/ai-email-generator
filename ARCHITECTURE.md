@@ -21,18 +21,21 @@ MVP AI Email Generator is a SaaS application with a Landing Page, authentication
 | **Styling** | Tailwind CSS | 4.x |
 | **UI Components** | shadcn/ui + Radix UI | latest |
 | **Animations** | Framer Motion | 11.x |
+| **Fonts** | Orbitron + JetBrains Mono + Share Tech Mono | via next/font |
+| **Design System** | Cyberpunk (dark-only, neon palette) | see DESIGN_SYSTEM.md |
 | **Auth + DB** | Supabase | 2.x |
 | **Validation** | Zod | 3.x |
 | **Forms** | React Hook Form | 7.x |
-| **Server State** | TanStack Query (React Query) | 5.x |
+| **Server State** | Server Actions + revalidatePath | — |
 | **Client State** | Zustand | 5.x |
 | **AI Provider** | Anthropic Claude API + Mock adapter | — |
 | **i18n** | next-intl | 3.x |
-| **Testing** | Vitest + Testing Library + Playwright | — |
+| **Package Manager** | Bun | 1.x |
+| **Testing** | bun test + Testing Library + Playwright | — |
 | **Linting** | ESLint (flat config) + Prettier | — |
 | **CI/CD** | GitHub Actions | — |
 | **Deploy** | Vercel | — |
-| **Containers** | Docker (dev + prod Dockerfile) | — |
+| **Containers** | Docker (`oven/bun` image) | — |
 | **Lib Docs** | Context7 MCP | — |
 
 ---
@@ -106,12 +109,15 @@ MVP AI Email Generator is a SaaS application with a Landing Page, authentication
 - Native Zod integration via resolver.
 - Supports `useFormState` for Server Actions.
 
-### 3.9 TanStack Query v5
+### 3.9 Server Actions (Server State)
 
 **Chosen because:**
-- Server state management: cache, stale-while-revalidate, refetch, optimistic updates.
-- AI generation is async: needs loading/error state, retry, result cache.
-- v5 built-in `suspense: true` mode simplifies Suspense boundaries.
+- Mutations are type-safe end-to-end without a separate API layer (no REST endpoints).
+- CSRF protection built into Next.js Server Actions.
+- `revalidatePath()` and `redirect()` work natively after mutations — no cache invalidation code needed.
+- AI generation is async: Server Action returns `ActionResult<T>` with loading/error/result state.
+- TanStack Query is **not used** in MVP — Server Actions + Server Components cover all data flows.
+  If optimistic updates become necessary post-MVP, it's the first library to add.
 
 ### 3.10 Zustand
 
@@ -138,11 +144,14 @@ MVP AI Email Generator is a SaaS application with a Landing Page, authentication
 - Lazy-loading translations via `messages` files.
 - EN + RU for MVP.
 
-### 3.13 Vitest + Testing Library + Playwright
+### 3.13 bun test + Testing Library + Playwright
 
 **Chosen because:**
-- Vitest: faster than Jest (Vite-based), native TypeScript, ESM support.
-- Testing Library: tests from the user's perspective (no implementation detail testing).
+- **bun test** is built into Bun — zero config, native TypeScript, fastest test runner available (runs test files in parallel workers natively).
+- `import { describe, it, expect, mock } from 'bun:test'` — no external test runner dep.
+- Built-in `--dom` flag activates happy-dom for React component tests without extra setup.
+- `--coverage` flag works out of the box.
+- Testing Library still used for React component queries (works with bun test).
 - Playwright: e2e for critical paths (auth flow, generate email flow).
 
 ### 3.14 Context7 MCP
@@ -158,6 +167,28 @@ MVP AI Email Generator is a SaaS application with a Landing Page, authentication
 - Bonus point from the spec.
 - `docker-compose.yml` for local development.
 - Production Dockerfile with multi-stage build (builder → runner).
+
+### 3.16 Cyberpunk Design System
+
+**Chosen because:**
+- Unique visual identity differentiates from generic SaaS products.
+- Dark-only design simplifies theming (no light/dark toggle complexity).
+- Monospace-first typography reinforces "developer tool" positioning.
+- Neon color palette (green/magenta/cyan) creates high contrast and memorability.
+- Chamfered geometry (clip-path) adds technical aesthetic without custom SVG.
+- Terminal-style UI components reinforce "command-line" metaphor for power users.
+
+**Key decisions:**
+- **Orbitron** for headings (futuristic, technical, high-impact)
+- **JetBrains Mono** for body (readable monospace, developer-friendly)
+- **Share Tech Mono** for labels (HUD aesthetic, technical feel)
+- **Hex colors** over oklch (precise neon values, easier to match design mockups)
+- **CSS animations** over Framer Motion for effects (performance, simpler for micro-interactions)
+- **Respect `prefers-reduced-motion`** for accessibility (WCAG 2.1 AA compliance)
+
+**Reference:** See `DESIGN_SYSTEM.md` for complete specification including color tokens, typography scale, button variants, input styles, card patterns, effects, and component examples.
+
+**UI Mockups:** `ui/ai-emai-generator/*.dc.html` (Landing, Auth, Dashboard, Pricing, Profile, DesignSystem)
 
 ---
 
@@ -384,14 +415,23 @@ ai-email-generator/
 │   ├── unit/
 │   ├── integration/
 │   └── e2e/playwright/
+├── ui/
+│   ├── ai-emai-generator/
+│   │   ├── Landing.dc.html
+│   │   ├── Auth.dc.html
+│   │   ├── Dashboard.dc.html
+│   │   ├── Pricing.dc.html
+│   │   ├── Profile.dc.html
+│   │   └── DesignSystem.dc.html
+│   └── support.js
 ├── .env.example
 ├── middleware.ts
 ├── next.config.ts
-├── tailwind.config.ts
 ├── tsconfig.json
-├── vitest.config.ts
 ├── playwright.config.ts
 ├── ARCHITECTURE.md
+├── DESIGN_SYSTEM.md
+├── CONTENT.md
 ├── SPEC.md
 ├── RULES.md
 ├── AGENT.md
@@ -450,6 +490,7 @@ CREATE POLICY "Users can CRUD own emails" ON public.generated_emails
 NEXT_PUBLIC_SUPABASE_URL=
 NEXT_PUBLIC_SUPABASE_ANON_KEY=
 SUPABASE_SERVICE_ROLE_KEY=
+SUPABASE_PROJECT_ID=
 
 # AI Provider: "claude" | "mock"
 AI_PROVIDER=mock

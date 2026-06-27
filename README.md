@@ -1,5 +1,9 @@
 # AI Email Generator
 
+> **Status: Planning / Pre-implementation.** This repository contains architecture
+> documentation and a phased implementation plan. No application code exists yet.
+> See [IMPLEMENTATION_PLAN.md](./IMPLEMENTATION_PLAN.md) to build from scratch.
+
 > Generate professional, casual, formal, or persuasive emails in seconds using AI.  
 > MVP built in 48 hours as part of a Vibe Coder / AI-First Developer test assignment.
 
@@ -7,6 +11,8 @@
 [![Deploy](https://img.shields.io/badge/deploy-vercel-black)](https://your-project.vercel.app)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue)](https://www.typescriptlang.org/)
 [![Next.js](https://img.shields.io/badge/Next.js-15-black)](https://nextjs.org/)
+
+<!-- TODO: Replace with real URLs after first deploy -->
 
 **Live URL:** [https://your-project.vercel.app](https://your-project.vercel.app)  
 **GitHub:** [https://github.com/your-username/ai-email-generator](https://github.com/your-username/ai-email-generator)
@@ -47,24 +53,25 @@
 
 ## Tech Stack
 
-| Layer | Technology | Version |
-|---|---|---|
-| Framework | Next.js (App Router) | 15.x |
-| Language | TypeScript (strict) | 5.x |
-| Styling | Tailwind CSS | 4.x |
-| UI Components | shadcn/ui + Radix UI | latest |
-| Animations | Framer Motion | 11.x |
-| Auth + Database | Supabase | 2.x |
-| Validation | Zod | 3.x |
-| Forms | React Hook Form | 7.x |
-| Server State | TanStack Query | 5.x |
-| Client State | Zustand | 5.x |
-| AI Provider | Anthropic Claude Haiku / Mock | — |
-| i18n | next-intl | 3.x |
-| Testing | Vitest + Testing Library + Playwright | — |
-| Deploy | Vercel | — |
-| Containers | Docker (multi-stage) | — |
-| CI/CD | GitHub Actions | — |
+| Layer           | Technology                              | Version |
+| --------------- | --------------------------------------- | ------- |
+| Framework       | Next.js (App Router)                    | 15.x    |
+| Language        | TypeScript (strict)                     | 5.x     |
+| Styling         | Tailwind CSS                            | 4.x     |
+| UI Components   | shadcn/ui + Radix UI                    | latest  |
+| Animations      | Framer Motion                           | 11.x    |
+| Auth + Database | Supabase                                | 2.x     |
+| Validation      | Zod                                     | 3.x     |
+| Forms           | React Hook Form                         | 7.x     |
+| Server State    | Server Actions + revalidatePath         | —       |
+| Client State    | Zustand                                 | 5.x     |
+| AI Provider     | Anthropic Claude Haiku / Mock           | —       |
+| i18n            | next-intl                               | 3.x     |
+| Package Manager | Bun                                     | 1.x     |
+| Testing         | bun test + Testing Library + Playwright | —       |
+| Deploy          | Vercel                                  | —       |
+| Containers      | Docker (`oven/bun` image)               | —       |
+| CI/CD           | GitHub Actions                          | —       |
 
 ---
 
@@ -138,9 +145,7 @@ ai-email-generator/
 │   └── e2e/playwright/        # Playwright e2e tests
 ├── middleware.ts              # Route protection (Supabase session check)
 ├── next.config.ts
-├── tailwind.config.ts
 ├── tsconfig.json
-├── vitest.config.ts
 ├── playwright.config.ts
 ├── ARCHITECTURE.md            # Full stack decisions & architecture
 ├── SPEC.md                    # Functional & non-functional requirements
@@ -156,8 +161,7 @@ ai-email-generator/
 
 ### Prerequisites
 
-- Node.js 20+
-- npm 10+
+- [Bun](https://bun.sh) 1.x (`curl -fsSL https://bun.sh/install | bash`)
 - A [Supabase](https://supabase.com) project (free tier is sufficient)
 - (Optional) Anthropic API key for real AI generation
 
@@ -171,7 +175,7 @@ cd ai-email-generator
 ### 2. Install dependencies
 
 ```bash
-npm install
+bun install
 ```
 
 ### 3. Set up environment variables
@@ -200,25 +204,26 @@ NEXT_PUBLIC_APP_URL=http://localhost:3000
 Run the migration in your Supabase project (SQL Editor):
 
 ```bash
-# Copy contents of docs/migrations/001_initial_schema.sql and run in Supabase SQL Editor
+# Open docs/migrations/001_initial_schema.sql and run its contents in Supabase SQL Editor
 ```
 
 Or if you have the Supabase CLI:
 
 ```bash
-supabase db push
+bunx supabase db push
 ```
 
 ### 5. Generate TypeScript types from your schema
 
 ```bash
-npm run gen:types
+# Requires SUPABASE_PROJECT_ID in .env.local
+bun run gen:types
 ```
 
 ### 6. Start the development server
 
 ```bash
-npm run dev
+bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000).
@@ -227,38 +232,78 @@ Open [http://localhost:3000](http://localhost:3000).
 
 ## Environment Variables
 
-| Variable | Required | Description |
-|---|---|---|
-| `NEXT_PUBLIC_SUPABASE_URL` | ✅ | Your Supabase project URL |
-| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | ✅ | Supabase anon (public) key |
-| `SUPABASE_SERVICE_ROLE_KEY` | ⚠️ | Only needed for admin operations |
-| `AI_PROVIDER` | ✅ | `mock` (default) or `claude` |
-| `ANTHROPIC_API_KEY` | ⚠️ | Required only when `AI_PROVIDER=claude` |
-| `NEXT_PUBLIC_APP_URL` | ✅ | Public URL of the app |
+| Variable                        | Required | Description                             |
+| ------------------------------- | -------- | --------------------------------------- |
+| `NEXT_PUBLIC_SUPABASE_URL`      | ✅       | Your Supabase project URL               |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | ✅       | Supabase anon (public) key              |
+| `SUPABASE_SERVICE_ROLE_KEY`     | ⚠️       | Only needed for admin operations        |
+| `AI_PROVIDER`                   | ✅       | `mock` (default) or `claude`            |
+| `ANTHROPIC_API_KEY`             | ⚠️       | Required only when `AI_PROVIDER=claude` |
+| `NEXT_PUBLIC_APP_URL`           | ✅       | Public URL of the app                   |
+| `SUPABASE_PROJECT_ID`           | ⚠️       | Required for `bun run gen:types`        |
 
 ---
 
 ## Running Tests
 
 ```bash
-# Unit + integration tests (Vitest)
-npm run test
+# Unit + integration tests (bun test)
+bun test
 
 # Watch mode
-npm run test:watch
+bun test --watch
+
+# With DOM (React component tests via happy-dom)
+bun test --dom
 
 # Coverage report
-npm run test:coverage
+bun test --coverage
 
 # End-to-end tests (Playwright)
-npm run test:e2e
+bun run test:e2e
 
 # Type check
-npm run typecheck
+bun run typecheck
 
 # Lint
-npm run lint
+bun run lint
 ```
+
+---
+
+## Pre-commit Hooks
+
+This project uses [Husky](https://typicode.github.io/husky/) + [lint-staged](https://github.com/okonet/lint-staged) to enforce code quality on every commit.
+
+**Setup (first time only):**
+
+```bash
+bun run prepare
+```
+
+**What runs automatically on `git commit`:**
+
+- ESLint + Prettier on staged `.ts`, `.tsx`, `.json`, `.md` files
+- Full TypeScript check (`bun run typecheck`)
+
+Hooks are mandatory — never skip with `--no-verify` unless explicitly approved.
+
+---
+
+## Database Seeding
+
+Seed development data (demo users + sample emails) for local development:
+
+```bash
+# Requires SUPABASE_SERVICE_ROLE_KEY in .env.local
+bun run db:seed
+```
+
+**Creates:**
+
+- `demo@example.com` / `password123` (Free plan)
+- `pro@example.com` / `password123` (Pro plan)
+- 2 sample emails for demo user
 
 ---
 
@@ -277,9 +322,10 @@ docker run -p 3000:3000 --env-file .env.local ai-email-gen
 
 ### Production build
 
-The Dockerfile uses a multi-stage build:
-1. **builder** — installs deps, runs `next build`
-2. **runner** — minimal Alpine image with `standalone` output
+The Dockerfile uses a multi-stage build on `oven/bun:1-alpine`:
+
+1. **builder** — `bun install --frozen-lockfile` + `bun run build`
+2. **runner** — minimal Alpine image with `standalone` Next.js output
 
 The output is ~50 MB, runs as a non-root user.
 
@@ -308,22 +354,22 @@ TypeScript-first inference: `z.infer<typeof schema>` gives exact types. Works en
 Mutations are type-safe end-to-end without a separate API layer. CSRF protection built in. `redirect()` and `revalidatePath()` work natively after mutations.
 
 **Zustand over Redux**  
-Only client UI state is managed in Zustand (form values, modal state). Server state goes through TanStack Query. Zustand stores are ~10 lines each, no boilerplate.
+Only client UI state is managed in Zustand (form values, modal state). Server state is fetched via Server Components + mutations go through Server Actions (revalidatePath for cache invalidation). Zustand stores are ~10 lines each, no boilerplate.
 
 ---
 
 ## AI Development Report
 
-Full report: [docs/AI_DEVELOPMENT_REPORT.md](./docs/AI_DEVELOPMENT_REPORT.md)
+> TODO: `docs/AI_DEVELOPMENT_REPORT.md` will be written after Phase 6 completion.
 
 ### AI Tools Used
 
-| Tool | Role |
-|---|---|
-| **Claude (Anthropic)** — Cowork mode | Architecture design, documentation, code generation, code review |
-| **Claude Code** | Scaffolding, file creation, iterative editing |
-| **Context7 MCP** | Fetching up-to-date library docs (Next.js, Supabase, Tailwind, shadcn) |
-| **GitNexus** | Project context management across LLM sessions |
+| Tool                                 | Role                                                                   |
+| ------------------------------------ | ---------------------------------------------------------------------- |
+| **Claude (Anthropic)** — Cowork mode | Architecture design, documentation, code generation, code review       |
+| **Claude Code**                      | Scaffolding, file creation, iterative editing                          |
+| **Context7 MCP**                     | Fetching up-to-date library docs (Next.js, Supabase, Tailwind, shadcn) |
+| **GitNexus**                         | Project context management across LLM sessions                         |
 
 ### Development Process
 

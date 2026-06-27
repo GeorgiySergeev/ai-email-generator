@@ -21,7 +21,7 @@ The user enters an email subject, selects a tone and length, and receives a read
 ### Two Mandatory Context Sources
 
 | Source           | What It Covers                                                           | When to Use                                         |
-| ------------------| --------------------------------------------------------------------------| -----------------------------------------------------|
+| ---------------- | ------------------------------------------------------------------------ | --------------------------------------------------- |
 | **GitNexus**     | Project-specific files: architecture, rules, types, schemas, actual code | Before every task                                   |
 | **Context7 MCP** | External library documentation (always up to date)                       | Before using any library API or installing packages |
 
@@ -47,18 +47,30 @@ Repository: `ai-email-generator` · Branch: `main`
 ```
 /AGENT.md              → (this file) quick start
 /ARCHITECTURE.md       → full stack, decisions, project structure, DB schema
+/DESIGN_SYSTEM.md      → cyberpunk design system (colors, fonts, components, effects)
 /RULES.md              → code rules: TypeScript, Tailwind, naming, Context7, tests, Git
 /SPEC.md               → functional + non-functional requirements, user stories
+/CONTENT.md            → all user-facing text, SEO meta, Schema.org, i18n content
 /IMPLEMENTATION_PLAN.md → phased plan with LLM prompts and test plans per step
 
 /src/types/index.ts              → all project types
 /src/types/ai.ts                 → AI Provider interface
 /src/lib/ai/types.ts             → AI Provider types
 /src/lib/validations/            → Zod schemas
-/src/app/globals.css             → design tokens (@theme)
+/src/app/globals.css             → design tokens (@theme) + cyberpunk effects
 /src/lib/supabase/               → Supabase clients
 /src/actions/                    → Server Actions
 /src/store/                      → Zustand stores
+
+/ui/                             → HTML mockups (reference only, not for production)
+  ├── ai-emai-generator/
+  │   ├── Landing.dc.html
+  │   ├── Auth.dc.html
+  │   ├── Dashboard.dc.html
+  │   ├── Pricing.dc.html
+  │   ├── Profile.dc.html
+  │   └── DesignSystem.dc.html
+  └── support.js
 ```
 
 ---
@@ -67,20 +79,21 @@ Repository: `ai-email-generator` · Branch: `main`
 
 When working with these libraries, resolve via Context7 first:
 
-| Library | Context7 ID |
-|---|---|
-| Next.js | `next.js` |
-| Supabase JS | `supabase-js` |
-| Supabase SSR | `supabase-ssr` |
-| Tailwind CSS v4 | `tailwindcss` |
-| shadcn/ui | `shadcn-ui` |
-| Zod | `zod` |
-| React Hook Form | `react-hook-form` |
-| Framer Motion | `framer-motion` |
-| TanStack Query v5 | `tanstack-query` |
-| Zustand | `zustand` |
-| next-intl | `next-intl` |
-| Anthropic SDK | `anthropic` |
+| Library           | Context7 ID       |
+| -------------------| -------------------|
+| Next.js           | `next.js`         |
+| Supabase JS       | `supabase-js`     |
+| Supabase SSR      | `supabase-ssr`    |
+| Tailwind CSS v4   | `tailwindcss`     |
+| shadcn/ui         | `shadcn-ui`       |
+| Lucide Icons      | `lucide`          |
+| Zod               | `zod`             |
+| React Hook Form   | `react-hook-form` |
+| Framer Motion     | `framer-motion`   |
+| TanStack Query v5 | `tanstack-query`  | _Not in MVP — future use_ |
+| Zustand           | `zustand`         |
+| next-intl         | `next-intl`       |
+| Anthropic SDK     | `anthropic`       |
 
 ---
 
@@ -94,7 +107,7 @@ Next.js 15 (App Router) + TypeScript + Tailwind 4 + shadcn/ui
         └── (dashboard)/ ── Dashboard, Profile, History ── Protected + TanStack Query
                 │
                 ├── Server Actions → Zod validation → AI Provider → Supabase
-                └── Zustand (UI state) + TanStack Query (server state)
+                └── Zustand (UI state) + Server Actions (server mutations)
 
 AI Provider Pattern:
   getAIProvider() → env AI_PROVIDER=mock  → MockProvider
@@ -126,9 +139,9 @@ AI Provider Pattern:
 ```typescript
 // Interface: src/lib/ai/types.ts
 type AIProvider = {
-  generateEmail: (params: GenerateEmailParams) => Promise<GenerateEmailResult>
-  readonly name: string
-}
+  generateEmail: (params: GenerateEmailParams) => Promise<GenerateEmailResult>;
+  readonly name: string;
+};
 
 // Factory: src/lib/ai/factory.ts  (switch via env AI_PROVIDER=mock|claude)
 // Mock:    src/lib/ai/providers/mock.ts
@@ -140,7 +153,7 @@ type AIProvider = {
 ```typescript
 // Browser client: src/lib/supabase/client.ts
 // Server client (cookies): src/lib/supabase/server.ts
-// DB types: src/types/database.ts (auto-generated via npm run gen:types)
+// DB types: src/types/database.ts (auto-generated via bun run gen:types)
 ```
 
 ### Zustand Stores
@@ -170,12 +183,40 @@ type AIProvider = {
 
 ## Design System
 
-All tokens defined in `src/app/globals.css` inside `@theme {}`.
+**Brand:** NEUR·O·MAIL (cyberpunk aesthetic)  
+**Full spec:** `DESIGN_SYSTEM.md`  
+**UI mockups:** `ui/ai-emai-generator/*.dc.html`
 
-**Colors:** `text-primary`, `bg-secondary`, `text-muted-foreground`, `border`, `bg-destructive`  
-**Typography:** `font-sans`, `font-mono`, `text-sm`, `text-xl`, `text-4xl`  
-**Spacing:** standard Tailwind (`p-4`, `mt-6`) + `py-section` for Landing page sections  
-**Radius:** `rounded-sm`, `rounded-md`, `rounded-lg`, `rounded-xl`
+### Colors (hex, dark-only)
+
+| Token | Hex | Usage |
+|-------|-----|-------|
+| `background` | `#0a0a0f` | Page background |
+| `card` | `#12121a` | Card surfaces |
+| `muted` | `#1c1c2e` | Muted backgrounds |
+| `border` | `#2a2a3a` | Borders, dividers |
+| `foreground` | `#e0e0e0` | Primary text |
+| `muted-foreground` | `#6b7280` | Secondary text |
+| `primary` | `#00ff88` | Neon green accent |
+| `secondary` | `#ff00ff` | Magenta accent |
+| `tertiary` | `#00d4ff` | Cyan accent |
+| `destructive` | `#ff3366` | Errors, delete |
+
+### Typography
+
+| Role | Font | CSS Variable |
+|------|------|--------------|
+| Headings | Orbitron (400/700/900) | `--font-display` |
+| Body/UI | JetBrains Mono (300-700) | `--font-mono` |
+| Labels/HUD | Share Tech Mono (400) | `--font-label` |
+
+### Key Patterns
+
+- **Chamfered buttons/inputs:** `clip-path: polygon(0 8px, 8px 0, calc(100% - 8px) 0, 100% 8px, 100% calc(100% - 8px), calc(100% - 8px) 100%, 8px 100%, 0 calc(100% - 8px))`
+- **Terminal headers:** Red/yellow/green dots + filename
+- **Input prefix:** ">" character
+- **Section labels:** `// 01_SECTION_NAME` format
+- **Effects:** rgb-shift, glitch, pulse-glow, blink, fade-up (respect `prefers-reduced-motion`)
 
 **UI components:** `src/components/ui/` (shadcn/ui) — do not edit directly; add via `npx shadcn add`.
 
@@ -198,17 +239,24 @@ Every implementation step ends with tests:
 
 ```markdown
 ## Tests
+
 ### Unit
+
 - [ ] [what we test] → [expected result]
+
 ### Integration
+
 - [ ] [what we test] → [expected result]
+
 ### Manual verification
+
 - [ ] [what to check in browser]
 ```
 
 Each phase ends with regression testing:
-- `npm run test` (Vitest) — all unit/integration tests
-- `npm run test:e2e` (Playwright) — critical paths
+
+- `bun test` — all unit/integration tests (bun test runner)
+- `bun run test:e2e` (Playwright) — critical paths
 
 Report written to `docs/reports/phase-N-report.md`.
 
@@ -217,25 +265,30 @@ Report written to `docs/reports/phase-N-report.md`.
 ## Dev Commands
 
 ```bash
-npm install             # install dependencies
-npm run dev             # start dev server (localhost:3000)
-npm run gen:types       # regenerate Supabase TypeScript types
-npm run test            # Vitest unit/integration
-npm run test:e2e        # Playwright e2e
-npm run test:coverage   # coverage report
-npm run build           # production build
-npm run start           # start production server
-npm run lint            # ESLint
-npm run typecheck       # TypeScript check (tsc --noEmit)
+bun install                  # install dependencies (uses bun.lockb)
+bun dev                      # start dev server (localhost:3000)
+bun run gen:types            # regenerate Supabase TypeScript types
+bun run db:seed              # seed dev data (demo@example.com / password123)
+bun test                     # bun test — unit/integration
+bun test --dom               # bun test with happy-dom (React component tests)
+bun test --watch             # watch mode
+bun test --coverage          # coverage report
+bun run test:e2e             # Playwright e2e
+bun run build                # production build
+bun run start                # start production server
+bun run lint                 # ESLint
+bun run typecheck            # TypeScript check (tsc --noEmit)
+bun run prepare              # install husky pre-commit hooks (first time only)
+bunx <pkg>                   # run a package without installing (replaces npx)
 ```
 
 ---
 
 ## Pre-Commit Checklist
 
-- [ ] `npm run typecheck` — zero errors
-- [ ] `npm run lint` — zero warnings
-- [ ] Tests for changed modules written and passing
+- [ ] `bun run typecheck` — zero errors
+- [ ] `bun run lint` — zero warnings
+- [ ] `bun test` — all unit/integration tests passing
 - [ ] No `console.log` in production code
 - [ ] Components work at 375px (mobile)
 - [ ] Context7 consulted for any library usage
@@ -247,7 +300,7 @@ npm run typecheck       # TypeScript check (tsc --noEmit)
 
 1. Do not add `'use client'` to Server Components without necessity
 2. Do not hardcode colors in Tailwind: `text-[#3B82F6]` → use `text-primary`
-3. Do not use `useEffect` for data fetching — use TanStack Query or Server Components
+3. Do not use `useEffect` for data fetching — use Server Components or Server Actions
 4. Do not mutate state directly in Zustand — use `set()`
 5. Do not forget `await` before `createClient()` from `@supabase/ssr` (it's async in App Router)
 6. Do not use `router.push()` after Server Action — use `redirect()` from `next/navigation` on the server
@@ -263,5 +316,5 @@ npm run typecheck       # TypeScript check (tsc --noEmit)
 - shadcn/ui components: Context7 → `shadcn-ui`
 - Tailwind CSS v4: Context7 → `tailwindcss`
 - Anthropic Claude API: Context7 → `anthropic`
-- TanStack Query v5: Context7 → `tanstack-query`
+- TanStack Query v5: Context7 → `tanstack-query` _(not used in MVP — add if optimistic updates needed)_
 - Zustand: Context7 → `zustand`

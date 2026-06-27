@@ -152,28 +152,29 @@ export const EmailGeneratorForm = () => { ... }
 
 ### 4.1 Design System via CSS Variables
 
-All tokens are defined in `src/app/globals.css` inside `@theme`:
+All tokens are defined in `src/app/globals.css` inside `@theme`. **Dark mode only** — no light theme.
 
 ```css
 @import "tailwindcss";
 
 @theme {
-  /* Colors */
-  --color-primary: oklch(59% 0.2 260);
-  --color-primary-foreground: oklch(98% 0 0);
-  --color-secondary: oklch(96% 0.01 260);
-  --color-secondary-foreground: oklch(20% 0 0);
-  --color-background: oklch(100% 0 0);
-  --color-foreground: oklch(10% 0 0);
-  --color-muted: oklch(96% 0.01 260);
-  --color-muted-foreground: oklch(55% 0.02 260);
-  --color-border: oklch(90% 0.01 260);
-  --color-destructive: oklch(55% 0.22 25);
-  --color-success: oklch(60% 0.18 145);
+  /* Colors - Cyberpunk Palette (hex for precise neon control) */
+  --color-background: #0a0a0f;
+  --color-card: #12121a;
+  --color-muted: #1c1c2e;
+  --color-border: #2a2a3a;
+  --color-foreground: #e0e0e0;
+  --color-muted-foreground: #6b7280;
+  --color-primary: #00ff88;
+  --color-secondary: #ff00ff;
+  --color-tertiary: #00d4ff;
+  --color-destructive: #ff3366;
 
-  /* Typography */
-  --font-sans: 'Inter', system-ui, sans-serif;
+  /* Typography - Cyberpunk Fonts */
+  --font-display: 'Orbitron', monospace;
   --font-mono: 'JetBrains Mono', monospace;
+  --font-label: 'Share Tech Mono', monospace;
+  
   --text-xs: 0.75rem;
   --text-sm: 0.875rem;
   --text-base: 1rem;
@@ -187,16 +188,10 @@ All tokens are defined in `src/app/globals.css` inside `@theme`:
   --spacing-section: 5rem;
   --spacing-container: 1.5rem;
 
-  /* Radius */
-  --radius-sm: 0.375rem;
-  --radius-md: 0.5rem;
-  --radius-lg: 0.75rem;
-  --radius-xl: 1rem;
-
-  /* Shadows */
-  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
-  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+  /* Shadows - Neon Glow */
+  --shadow-sm: 0 0 5px rgba(0, 255, 136, 0.2);
+  --shadow-md: 0 0 10px rgba(0, 255, 136, 0.3);
+  --shadow-lg: 0 0 20px rgba(0, 255, 136, 0.4);
 
   /* Animation */
   --duration-fast: 150ms;
@@ -205,14 +200,67 @@ All tokens are defined in `src/app/globals.css` inside `@theme`:
   --ease-default: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-@media (prefers-color-scheme: dark) {
-  @theme {
-    --color-background: oklch(10% 0 0);
-    --color-foreground: oklch(98% 0 0);
-    /* ... */
+/* Layout utilities */
+@utility container {
+  width: 100%;
+  max-width: 1280px;
+  margin-inline: auto;
+  padding-inline: var(--spacing-container);
+}
+
+@utility container-narrow {
+  width: 100%;
+  max-width: 640px;
+  margin-inline: auto;
+  padding-inline: var(--spacing-container);
+}
+
+/* Focus indicators (WCAG 2.1 AA) */
+@layer base {
+  :focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+  }
+}
+
+/* Cyberpunk Effects */
+@keyframes rgb-shift {
+  0%, 100% { text-shadow: -1px 0 #ff00ff, 1px 0 #00d4ff; }
+  50% { text-shadow: 1px 0 #ff00ff, -1px 0 #00d4ff; }
+}
+
+@keyframes glitch {
+  0%, 79%, 100% { transform: translate(0); }
+  80% { transform: translate(-3px, 1px); }
+  83% { transform: translate(2px, -1px); }
+  86% { transform: translate(0); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 5px #00ff88, 0 0 10px rgba(0, 255, 136, 0.35); }
+  50% { box-shadow: 0 0 14px #00ff88, 0 0 28px rgba(0, 255, 136, 0.55); }
+}
+
+@keyframes blink {
+  50% { opacity: 0; }
+}
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(22px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }
 ```
+
+**Reference:** See `DESIGN_SYSTEM.md` for complete cyberpunk design system specification.
 
 ### 4.2 Tailwind Class Rules
 
@@ -269,6 +317,58 @@ Breakpoints: `sm: 640px`, `md: 768px`, `lg: 1024px`, `xl: 1280px`.
 
 No CSS Modules (`.module.css`) for components — Tailwind only.  
 `globals.css` is reserved for: `@theme` tokens, CSS reset/base, `@layer base` for global HTML elements.
+
+### 4.6 Icons — lucide-react
+
+All icons come from `lucide-react`. No other icon libraries, no raw SVG files for UI icons.
+
+```typescript
+// ✅ CORRECT
+import { Mail, ArrowRight, Check, X } from 'lucide-react'
+
+<Mail className="size-5 text-muted-foreground" />
+<ArrowRight className="size-4" aria-hidden="true" />
+
+// ❌ FORBIDDEN
+import { FaEnvelope } from 'react-icons/fa'
+import { MdArrowForward } from 'react-icons/md'
+```
+
+**Rules:**
+- Always pass `className` for sizing (`size-4`, `size-5`, `size-6`) — never hardcode `width`/`height`.
+- Decorative icons: add `aria-hidden="true"`.
+- Interactive icons (buttons, links): wrap in a parent with `aria-label`.
+- Use `strokeWidth` prop only when the design explicitly requires it.
+
+### 4.7 Logo
+
+The logo is a **text-based inline SVG + wordmark** — no image files, no CDN dependency.
+
+```typescript
+// src/components/shared/logo.tsx
+import { Mail } from 'lucide-react'
+import { cn } from '@/lib/utils'
+
+type LogoProps = { className?: string; size?: 'sm' | 'md' | 'lg' }
+
+const sizes = {
+  sm: { icon: 'size-5', text: 'text-lg' },
+  md: { icon: 'size-6', text: 'text-xl' },
+  lg: { icon: 'size-8', text: 'text-2xl' },
+} as const
+
+export const Logo = ({ className, size = 'md' }: LogoProps) => (
+  <span className={cn('inline-flex items-center gap-2 font-bold text-foreground', className)}>
+    <Mail className={sizes[size].icon} aria-hidden="true" />
+    <span className={sizes[size].text}>EmailAI</span>
+  </span>
+)
+```
+
+**Rules:**
+- Use `<Logo />` component everywhere — no emoji `✉️` in production code.
+- Favicon: generate at build time via `next/font` or a static `public/favicon.ico` (32×32, created in Phase 3).
+- OG image: `public/og-image.png` (1200×630) — generate with `/api/og` route or static file in Phase 3.
 
 ---
 
@@ -391,7 +491,7 @@ Training data is unreliable for library APIs: versions change, methods deprecate
 | Tailwind CSS v4 config | Context7 → `tailwindcss` |
 | Framer Motion animations | Context7 → `framer-motion` |
 | Zod schema patterns | Context7 → `zod` |
-| TanStack Query hooks | Context7 → `tanstack-query` |
+| TanStack Query hooks | Context7 → `tanstack-query` | _Not used in MVP — reference for future_ |
 | Zustand store patterns | Context7 → `zustand` |
 
 ### 7.3 Workflow
@@ -429,13 +529,13 @@ Before adding any dependency:
 
 ```bash
 # 1. Check if it already exists
-cat package.json | grep <package-name>
+bun pm ls | grep <package-name>
 
 # 2. Fetch docs via Context7 to confirm correct package name and version
 # Context7 MCP → resolve-library-id → "<package-name>"
 
 # 3. Install
-npm install <package-name>
+bun add <package-name>
 
 # 4. Document the addition in the PR description with reason
 ```
@@ -450,8 +550,8 @@ No package should be added without: (a) a reason, (b) bundle size consideration,
 
 | Type | Covers | Tool |
 |---|---|---|
-| Unit | utilities, Zod schemas, AI providers, hooks | Vitest |
-| Integration | Server Actions, Supabase queries | Vitest + msw |
+| Unit | utilities, Zod schemas, AI providers, hooks | bun test |
+| Integration | Server Actions, Supabase queries | bun test + msw |
 | E2E | auth flow, generate email flow, pricing page | Playwright |
 
 ### 8.2 Test Writing Rules
@@ -460,7 +560,18 @@ No package should be added without: (a) a reason, (b) bundle size consideration,
 - E2E tests in `tests/e2e/`.
 - Naming: `describe('generateEmail') → it('should return error when subject is empty')`.
 - No `test.only` in commits.
-- Mock external dependencies (Supabase, Anthropic API) via `vi.mock()` or msw.
+- Import from `bun:test`, not `vitest`:
+
+```typescript
+// ❌
+import { describe, it, expect, vi } from 'vitest'
+
+// ✅
+import { describe, it, expect, mock, spyOn } from 'bun:test'
+```
+
+- Mock modules via `mock.module()` (bun test equivalent of `vi.mock()`).
+- DOM tests run with `bun test --dom` (uses built-in happy-dom).
 
 ---
 
@@ -486,12 +597,30 @@ chore/setup-ci-pipeline
 
 ### 9.3 PR Checklist
 
-- [ ] Tests written and passing
-- [ ] TypeScript error-free (`tsc --noEmit`)
-- [ ] ESLint warning-free
+- [ ] Tests written and passing (`bun test`)
+- [ ] TypeScript error-free (`bun run typecheck`)
+- [ ] ESLint warning-free (`bun run lint`)
 - [ ] No `console.log` in production code
 - [ ] Components work on mobile (320px+)
 - [ ] Context7 consulted for any new library usage
+
+### 9.4 Pre-commit Hooks (Husky + lint-staged)
+
+Pre-commit hooks are **mandatory** and enforced automatically via Husky.
+
+**What runs on every commit:**
+- `lint-staged`: ESLint + Prettier on staged `.ts`, `.tsx`, `.json`, `.md` files
+- `bun run typecheck`: full TypeScript check
+
+**Rules:**
+- Never skip hooks with `--no-verify` unless explicitly approved
+- If hooks fail, fix the issues and commit again
+- Hook configuration lives in `.husky/pre-commit` and `package.json` → `lint-staged`
+
+**Setup (first time only):**
+```bash
+bun run prepare  # installs husky hooks
+```
 
 ---
 
@@ -511,3 +640,238 @@ chore/setup-ci-pipeline
 - Server Actions validate session before executing.
 - Content Security Policy (CSP) headers in `next.config.ts`.
 - SQL injection prevented via Supabase typed client (prepared statements).
+
+---
+
+## 12. Semantic HTML & Accessibility
+
+### 12.1 Document Structure (Mobile-First)
+
+Every page follows this semantic structure:
+
+```html
+<body>
+  <a href="#main-content" class="sr-only focus:not-sr-only">
+    Skip to content
+  </a>
+
+  <header role="banner">
+    <div class="container">
+      <nav aria-label="Main navigation">...</nav>
+    </div>
+  </header>
+
+  <main id="main-content" role="main">
+    <section aria-labelledby="section-heading">
+      <div class="container">
+        <h2 id="section-heading">...</h2>
+        <!-- content -->
+      </div>
+    </section>
+    <!-- more sections -->
+  </main>
+
+  <footer role="contentinfo">
+    <div class="container">
+      <nav aria-label="Footer navigation">...</nav>
+    </div>
+  </footer>
+</body>
+```
+
+**Rules:**
+- `<main>` — **one per page**, with `id="main-content"` for skip-link
+- `<section>` — each with `aria-labelledby` pointing to its heading
+- `<div class="container">` — layout only, no semantic meaning
+- Heading hierarchy: `H1` → `H2` → `H3` (never skip levels)
+- Landmark roles: `banner` (header), `main`, `contentinfo` (footer)
+
+### 12.2 Container Utility
+
+Add to `src/app/globals.css`:
+
+```css
+@utility container {
+  width: 100%;
+  max-width: 1280px;
+  margin-inline: auto;
+  padding-inline: var(--spacing-container);
+}
+
+@utility container-narrow {
+  width: 100%;
+  max-width: 640px;
+  margin-inline: auto;
+  padding-inline: var(--spacing-container);
+}
+```
+
+**Usage:**
+```tsx
+// Standard container (max 1280px)
+<div className="container">...</div>
+
+// Narrow container for forms (max 640px)
+<div className="container-narrow">...</div>
+```
+
+### 12.3 Mobile-First Responsive Design
+
+**All components start with mobile styles, then add breakpoints:**
+
+```tsx
+// ✅ CORRECT — mobile-first
+<section className="py-12 md:py-16 lg:py-20">
+  <div className="container">
+    <h2 className="text-3xl md:text-4xl lg:text-5xl">...</h2>
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {/* cards */}
+    </div>
+  </div>
+</section>
+
+// ❌ WRONG — desktop-first
+<section className="py-20 md:py-16 sm:py-12">
+  <div className="grid grid-cols-3 md:grid-cols-2 sm:grid-cols-1">
+```
+
+**Breakpoints (Tailwind defaults):**
+- Base: `0px` (mobile-first, no prefix)
+- `sm:` `640px` (large phones)
+- `md:` `768px` (tablets)
+- `lg:` `1024px` (laptops)
+- `xl:` `1280px` (desktops)
+
+**Mobile-specific rules:**
+- Touch targets: minimum `44px × 44px`
+- CTA buttons: `w-full` on mobile, `sm:w-auto` on desktop
+- Navigation: hamburger menu on mobile, full nav on `lg:flex`
+- Forms: full-width inputs, stacked labels
+- Modals: full-screen on mobile, centered on desktop
+
+### 12.4 Accessibility Requirements (WCAG 2.1 AA)
+
+**Mandatory for all components:**
+
+1. **Skip link** — first element in `<body>`:
+   ```tsx
+   <a href="#main-content" className="sr-only focus:not-sr-only absolute top-4 left-4 z-50 rounded-md bg-primary px-4 py-2 text-primary-foreground">
+     Skip to content
+   </a>
+   ```
+
+2. **Focus indicators** — visible on all interactive elements:
+   ```css
+   /* globals.css */
+   :focus-visible {
+     outline: 2px solid var(--color-primary);
+     outline-offset: 2px;
+   }
+   ```
+
+3. **Form accessibility:**
+   ```tsx
+   <label htmlFor="email">Email</label>
+   <input id="email" aria-describedby="email-error" />
+   <p id="email-error" role="alert">Invalid email</p>
+   ```
+
+4. **Loading states:**
+   ```tsx
+   <div aria-busy="true" aria-live="polite">
+     <Spinner />
+     <span className="sr-only">Loading...</span>
+   </div>
+   ```
+
+5. **Icons:**
+   ```tsx
+   // Decorative
+   <Mail aria-hidden="true" />
+
+   // Functional
+   <button aria-label="Delete email">
+     <Trash aria-hidden="true" />
+   </button>
+   ```
+
+6. **Images:**
+   ```tsx
+   // Informative
+   <img src="..." alt="Dashboard showing email history" />
+
+   // Decorative
+   <img src="..." alt="" aria-hidden="true" />
+   ```
+
+**Forbidden:**
+- `<div onclick>` — use `<button>` or `<a>`
+- `tabIndex={0}` on non-interactive elements
+- `outline: none` without replacement
+- Color-only indicators (add icons/text)
+
+### 12.5 Schema.org Structured Data
+
+Add JSON-LD to pages for rich snippets:
+
+```tsx
+// src/app/(marketing)/page.tsx
+export default function LandingPage() {
+  const faqSchema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": CONTENT.landing.faq.map(item => ({
+      "@type": "Question",
+      "name": item.question,
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": item.answer
+      }
+    }))
+  }
+
+  return (
+    <>
+      {/* page content */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+      />
+    </>
+  )
+}
+```
+
+**Required schemas:**
+- Landing: `Organization`, `WebApplication`, `FAQPage`
+- Pricing: `Product` with `AggregateOffer`
+- Auth: none (not indexed)
+
+See `CONTENT.md` §6 for full schema definitions.
+
+### 12.6 Content Management
+
+**All user-facing text comes from `CONTENT.md`:**
+
+```tsx
+// src/lib/content.ts
+export const CONTENT = {
+  landing: {
+    hero: {
+      heading: "Write Better Emails in Seconds",
+      // ...
+    }
+  }
+}
+
+// In components
+import { CONTENT } from '@/lib/content'
+
+<h1>{CONTENT.landing.hero.heading}</h1>
+```
+
+**Rules:**
+- Never hardcode marketing copy in components
+- Update `CONTENT.md` first, then `src/lib/content.ts`
+- For i18n: populate `messages/en.json` and `messages/ru.json` from `CONTENT.md`
+- SEO meta tags: defined in `CONTENT.md` §1.1, §2.1, etc.

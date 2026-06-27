@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&amp;family=JetBrains+Mono:wght@300;400;500;700&amp;family=Share+Tech+Mono&amp;display=swap">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: #0a0a0f; color: #e0e0e0; min-height: 100vh; overflow-x: hidden; }
+    input, textarea, select { font-family: 'JetBrains Mono', monospace; background: #12121a; color: #00ff88; border: 1px solid #2a2a3a; outline: none; }
+    input:focus, textarea:focus { border-color: #00ff88; box-shadow: 0 0 6px rgba(0,255,136,0.2); }
+    textarea::placeholder, input::placeholder { color: #3a3a4a; }
+    ::-webkit-scrollbar { width: 3px; }
+    ::-webkit-scrollbar-thumb { background: #2a2a3a; }
+    @keyframes blink { 50% { opacity: 0; } }
+    @keyframes pulse-glow {
+      0%,100% { box-shadow: 0 0 5px #00ff88, 0 0 10px rgba(0,255,136,0.3); }
+      50%      { box-shadow: 0 0 14px #00ff88, 0 0 28px rgba(0,255,136,0.5); }
+    }
+    @keyframes scan-line { 0% { top:-2px; } 100% { top:100vh; } }
+    @keyframes fade-in { from { opacity:0; } to { opacity:1; } }
+    @media (max-width: 800px) {
+      #dash-layout { grid-template-columns: 1fr !important; }
+      #sidebar { display: none !important; }
+      #gen-grid { grid-template-columns: 1fr !important; }
+    }
+  </style>
+</helmet>
+
+<!-- Scanlines -->
+<div style="position:fixed;inset:0;pointer-events:none;z-index:9990;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.055) 2px,rgba(0,0,0,0.055) 4px);"></div>
+
+
+<!-- Top bar -->
+<header style="position:sticky;top:0;z-index:200;height:56px;display:flex;align-items:center;background:rgba(10,10,15,0.95);backdrop-filter:blur(14px);border-bottom:1px solid #2a2a3a;padding:0 24px;">
+  <div style="display:flex;align-items:center;justify-content:space-between;width:100%;">
+    <a href="Landing.dc.html" style="font-family:'Orbitron',monospace;font-weight:900;font-size:0.9rem;color:#00ff88;text-decoration:none;letter-spacing:0.12em;text-shadow:-1px 0 #ff00ff,1px 0 #00d4ff;">NEUR·O·MAIL</a>
+    <div style="display:flex;align-items:center;gap:20px;">
+      <span style="font-family:'Share Tech Mono',monospace;font-size:0.6rem;color:#3a3a4a;letter-spacing:0.1em;">STATUS: <span style="color:#00ff88;">■ ONLINE</span></span>
+      <div style="width:28px;height:28px;border-radius:50%;background:#1c1c2e;border:1px solid #2a2a3a;display:flex;align-items:center;justify-content:center;font-family:'Orbitron',monospace;font-size:0.65rem;color:#00ff88;">U</div>
+      <a href="Landing.dc.html" style="font-family:'JetBrains Mono',monospace;font-size:0.62rem;color:#6b7280;text-decoration:none;text-transform:uppercase;letter-spacing:0.12em;transition:color 120ms;" style-hover="color:#ff3366">logout</a>
+    </div>
+  </div>
+</header>
+
+<!-- Main layout -->
+<div id="dash-layout" style="display:grid;grid-template-columns:220px 1fr;min-height:calc(100vh - 56px);">
+
+  <!-- Sidebar -->
+  <aside id="sidebar" style="background:#12121a;border-right:1px solid #2a2a3a;padding:24px 0;display:flex;flex-direction:column;">
+    <nav style="display:flex;flex-direction:column;gap:2px;padding:0 12px;flex:1;">
+      <div style="font-family:'Share Tech Mono',monospace;font-size:0.55rem;color:#3a3a4a;letter-spacing:0.18em;text-transform:uppercase;padding:8px 12px;margin-bottom:4px;">NAVIGATION</div>
+      <a href="Landing.dc.html" style="font-family:'JetBrains Mono',monospace;font-size:0.72rem;color:#6b7280;text-decoration:none;padding:9px 12px;display:flex;align-items:center;gap:10px;transition:all 120ms;border-radius:2px;" style-hover="color:#e0e0e0;background:#1c1c2e;">
+        <span style="color:#3a3a4a;font-size:0.8rem;">⌂</span> Home
+      </a>
+      <a href="Dashboard.dc.html" style="font-family:'JetBrains Mono',monospace;font-size:0.72rem;color:#00ff88;text-decoration:none;padding:9px 12px;display:flex;align-items:center;gap:10px;background:#1c1c2e;border-left:2px solid #00ff88;">
+        <span style="font-size:0.8rem;">⚡</span> Generator
+      </a>
+      <a href="#history" style="font-family:'JetBrains Mono',monospace;font-size:0.72rem;color:#6b7280;text-decoration:none;padding:9px 12px;display:flex;align-items:center;gap:10px;transition:all 120ms;" style-hover="color:#e0e0e0;background:#1c1c2e;">
+        <span style="color:#3a3a4a;font-size:0.8rem;">◷</span> History
+      </a>
+      <a href="#" style="font-family:'JetBrains Mono',monospace;font-size:0.72rem;color:#6b7280;text-decoration:none;padding:9px 12px;display:flex;align-items:center;gap:10px;transition:all 120ms;" style-hover="color:#e0e0e0;background:#1c1c2e;">
+        <span style="color:#3a3a4a;font-size:0.8rem;">◎</span> Profile
+      </a>
+    </nav>
+
+    <!-- Usage -->
+    <div style="padding:16px 24px;border-top:1px solid #2a2a3a;margin-top:auto;">
+      <div style="font-family:'Share Tech Mono',monospace;font-size:0.55rem;color:#3a3a4a;letter-spacing:0.14em;text-transform:uppercase;margin-bottom:8px;">USAGE // FREE PLAN</div>
+      <div style="background:#0a0a0f;height:4px;border-radius:1px;margin-bottom:6px;overflow:hidden;">
+        <div style="width:30%;height:100%;background:#00ff88;box-shadow:0 0 6px rgba(0,255,136,0.5);"></div>
+      </div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:0.62rem;color:#6b7280;">3 / 10 emails</div>
+      <a href="Landing.dc.html#pricing" style="display:block;margin-top:12px;font-family:'JetBrains Mono',monospace;font-size:0.62rem;text-transform:uppercase;letter-spacing:0.12em;padding:7px;text-align:center;background:transparent;color:#00ff88;text-decoration:none;border:1px solid #00ff88;clip-path:polygon(0 4px,4px 0,calc(100% - 4px) 0,100% 4px,100% calc(100% - 4px),calc(100% - 4px) 100%,4px 100%,0 calc(100% - 4px));transition:all 150ms;" style-hover="background:rgba(0,255,136,0.08)">Upgrade →</a>
+    </div>
+  </aside>
+
+  <!-- Main content -->
+  <main style="padding:28px 32px;overflow-y:auto;">
+
+    <!-- Page header -->
+    <div style="margin-bottom:28px;">
+      <div style="font-family:'Share Tech Mono',monospace;font-size:0.58rem;color:#00ff88;letter-spacing:0.22em;text-transform:uppercase;margin-bottom:6px;">// EMAIL_GENERATOR</div>
+      <h1 style="font-family:'Orbitron',monospace;font-size:1.5rem;font-weight:900;text-transform:uppercase;letter-spacing:0.05em;color:#e0e0e0;">Generate Email</h1>
+    </div>
+
+    <!-- Generator grid -->
+    <div id="gen-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start;margin-bottom:40px;">
+
+      <!-- Left: Form -->
+      <div style="background:#12121a;border:1px solid #2a2a3a;clip-path:polygon(0 12px,12px 0,calc(100% - 12px) 0,100% 12px,100% calc(100% - 12px),calc(100% - 12px) 100%,12px 100%,0 calc(100% - 12px));overflow:hidden;">
+        <div style="background:#0a0a0f;border-bottom:1px solid #2a2a3a;padding:9px 16px;display:flex;align-items:center;gap:6px;">
+          <span style="width:7px;height:7px;border-radius:50%;background:#ff3366;display:block;"></span>
+          <span style="width:7px;height:7px;border-radius:50%;background:#ffcc00;display:block;"></span>
+          <span style="width:7px;height:7px;border-radius:50%;background:#00ff88;display:block;box-shadow:0 0 4px #00ff88;"></span>
+          <span style="margin-left:8px;font-family:'Share Tech Mono',monospace;font-size:0.57rem;color:#3a3a4a;letter-spacing:0.08em;">generator.config</span>
+        </div>
+        <div style="padding:24px;display:flex;flex-direction:column;gap:20px;">
+          <!-- Subject -->
+          <div>
+            <div style="font-family:'Share Tech Mono',monospace;font-size:0.57rem;color:#6b7280;letter-spacing:0.14em;text-transform:uppercase;margin-bottom:8px;">01 // SUBJECT LINE</div>
+            <div style="position:relative;">
+              <span style="position:absolute;left:12px;top:13px;color:#00ff88;font-family:'JetBrains Mono',monospace;font-size:0.82rem;pointer-events:none;">></span>
+              <textarea value="{{ subject }}" onChange="{{ handleSubject }}" placeholder="What is your email about?" rows="3" style="width:100%;padding:11px 11px 11px 30px;font-size:0.78rem;resize:vertical;line-height:1.6;clip-path:polygon(0 5px,5px 0,calc(100% - 5px) 0,100% 5px,100% calc(100% - 5px),calc(100% - 5px) 100%,5px 100%,0 calc(100% - 5px));"></textarea>
+            </div>
+          </div>
+          <!-- Tone -->
+          <div>
+            <div style="font-family:'Share Tech Mono',monospace;font-size:0.57rem;color:#6b7280;letter-spacing:0.14em;text-transform:uppercase;margin-bottom:8px;">02 // TONE MATRIX</div>
+            {{ tonePills }}
+          </div>
+          <!-- Length -->
+          <div>
+            <div style="font-family:'Share Tech Mono',monospace;font-size:0.57rem;color:#6b7280;letter-spacing:0.14em;text-transform:uppercase;margin-bottom:8px;">03 // OUTPUT LENGTH</div>
+            {{ lengthPills }}
+          </div>
+          <!-- Generate -->
+          <button onClick="{{ handleGenerate }}" disabled="{{ genDisabled }}" style="{{ genBtnStyle }}">{{ genLabel }}</button>
+        </div>
+      </div>
+
+      <!-- Right: Output -->
+      <div style="background:#12121a;border:1px solid #2a2a3a;clip-path:polygon(0 12px,12px 0,calc(100% - 12px) 0,100% 12px,100% calc(100% - 12px),calc(100% - 12px) 100%,12px 100%,0 calc(100% - 12px));display:flex;flex-direction:column;min-height:360px;overflow:hidden;">
+        <div style="background:#0a0a0f;border-bottom:1px solid #2a2a3a;padding:9px 16px;display:flex;align-items:center;justify-content:space-between;">
+          <span style="font-family:'Share Tech Mono',monospace;font-size:0.57rem;color:#3a3a4a;letter-spacing:0.08em;">OUTPUT_STREAM</span>
+          <sc-if value="{{ hasResult }}" hint-placeholder-val="{{ false }}">
+            <button onClick="{{ handleCopy }}" style="font-family:'JetBrains Mono',monospace;font-size:0.6rem;text-transform:uppercase;letter-spacing:0.12em;padding:5px 14px;background:transparent;color:#00ff88;border:1px solid #00ff88;clip-path:polygon(0 3px,3px 0,calc(100% - 3px) 0,100% 3px,100% calc(100% - 3px),calc(100% - 3px) 100%,3px 100%,0 calc(100% - 3px));cursor:pointer;transition:all 150ms;" style-hover="background:rgba(0,255,136,0.1)">{{ copyLabel }}</button>
+          </sc-if>
+        </div>
+        <div style="flex:1;padding:20px;display:flex;flex-direction:column;">
+          <sc-if value="{{ isIdle }}" hint-placeholder-val="{{ true }}">
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;opacity:0.25;">
+              <div style="font-family:'Share Tech Mono',monospace;font-size:0.62rem;color:#6b7280;letter-spacing:0.14em;text-transform:uppercase;">AWAITING INPUT</div>
+              <div style="font-family:'JetBrains Mono',monospace;font-size:0.68rem;color:#3a3a4a;">Configure and generate to see output</div>
+            </div>
+          </sc-if>
+          <sc-if value="{{ generating }}" hint-placeholder-val="{{ false }}">
+            <div style="padding:8px 0;font-family:'JetBrains Mono',monospace;font-size:0.76rem;line-height:2.1;">
+              <div style="color:#00ff88;">→ analyzing subject...</div>
+              <div style="color:#00d4ff;">→ applying tone matrix...</div>
+              <div style="color:#6b7280;">→ generating output<span style="animation:blink 0.7s step-end infinite;color:#00ff88;">_</span></div>
+            </div>
+          </sc-if>
+          <sc-if value="{{ hasResult }}" hint-placeholder-val="{{ false }}">
+            <pre style="font-family:'JetBrains Mono',monospace;font-size:0.76rem;color:#e0e0e0;white-space:pre-wrap;line-height:1.85;flex:1;animation:fade-in 0.3s ease;">{{ result }}</pre>
+          </sc-if>
+        </div>
+      </div>
+    </div>
+
+    <!-- History -->
+    <div id="history">
+      <div style="font-family:'Share Tech Mono',monospace;font-size:0.58rem;color:#00ff88;letter-spacing:0.22em;text-transform:uppercase;margin-bottom:16px;">// GENERATION_HISTORY</div>
+      <div style="display:flex;flex-direction:column;border:1px solid #2a2a3a;">
+        {{ historyItems }}
+      </div>
+    </div>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = {
+    subject: '',
+    tone: 'professional',
+    length: 'medium',
+    result: null,
+    generating: false,
+    copied: false,
+    history: [
+      { id:1, subject:'Q3 performance update for board', tone:'professional', length:'medium', ts:'Today 09:42' },
+      { id:2, subject:'Team lunch — Friday invitation', tone:'friendly', length:'short', ts:'Yesterday 14:18' },
+      { id:3, subject:'Project deadline extension request', tone:'formal', length:'medium', ts:'Jun 24 11:05' },
+    ],
+  };
+
+  getMockEmail(subject, tone, length) {
+    const g = { professional:'Dear [Name]', casual:'Hey [Name]', formal:'Dear Mr./Ms. [Name]', friendly:'Hi [Name]!', persuasive:'Hi [Name]' };
+    const sg = { professional:'Best regards', casual:'Cheers', formal:'Sincerely yours', friendly:'Warm regards', persuasive:'Looking forward to your reply' };
+    const b = {
+      short: `I wanted to reach out regarding "${subject}".\n\nThis covers the key points concisely. Looking forward to your feedback.`,
+      medium: `I wanted to reach out regarding "${subject}".\n\nI've given this careful thought and believe it warrants our attention. After reviewing the relevant context, I'm confident we can move forward effectively.\n\nPlease share your thoughts when you get a chance.`,
+      long: `I wanted to reach out regarding "${subject}".\n\nAfter careful consideration, I believe this topic deserves a thorough discussion. Key points to address:\n\n1. The current context and why it matters now\n2. Options available and their respective trade-offs\n3. Recommended course of action\n\nI believe the most effective approach is to establish a clear framework before we proceed. This addresses the immediate concern while setting a positive precedent going forward.\n\nI'd welcome the chance to discuss further. Please feel free to reach out with any questions.`,
+    };
+    return `${g[tone]||g.professional},\n\n${b[length]||b.medium}\n\n${sg[tone]||sg.professional},\n[Your Name]`;
+  }
+
+  renderVals() {
+    const s = this.state;
+    const tones = ['professional','casual','formal','friendly','persuasive'];
+    const lengths = ['short','medium','long'];
+    const toneColor = { professional:'#00ff88', casual:'#00d4ff', formal:'#ff00ff', friendly:'#00ff88', persuasive:'#ff00ff' };
+    const canGen = s.subject.trim().length >= 3 && !s.generating;
+
+    const tonePills = React.createElement('div', { style:{ display:'flex', gap:6, flexWrap:'wrap' } },
+      tones.map(t => React.createElement('button', { key:t, onClick:()=>this.setState({tone:t}), style:{
+        fontFamily:'"JetBrains Mono",monospace', fontSize:'0.62rem', textTransform:'uppercase', letterSpacing:'0.1em',
+        padding:'5px 11px', background: s.tone===t ? (toneColor[t]||'#00ff88') : 'transparent',
+        color: s.tone===t ? '#0a0a0f' : '#6b7280',
+        border:`1px solid ${s.tone===t ? (toneColor[t]||'#00ff88') : '#2a2a3a'}`,
+        cursor:'pointer', transition:'all 150ms',
+        clipPath:'polygon(0 3px,3px 0,calc(100% - 3px) 0,100% 3px,100% calc(100% - 3px),calc(100% - 3px) 100%,3px 100%,0 calc(100% - 3px))',
+      } }, t))
+    );
+
+    const lengthLabels = { short:'Short', medium:'Medium', long:'Long' };
+    const lengthPills = React.createElement('div', { style:{ display:'flex', gap:6 } },
+      lengths.map(l => React.createElement('button', { key:l, onClick:()=>this.setState({length:l}), style:{
+        flex:1, fontFamily:'"JetBrains Mono",monospace', fontSize:'0.62rem', textTransform:'uppercase',
+        letterSpacing:'0.08em', padding:'7px 6px', textAlign:'center',
+        background: s.length===l ? '#00ff88' : 'transparent',
+        color: s.length===l ? '#0a0a0f' : '#6b7280',
+        border:`1px solid ${s.length===l ? '#00ff88' : '#2a2a3a'}`,
+        cursor:'pointer', transition:'all 150ms',
+        clipPath:'polygon(0 3px,3px 0,calc(100% - 3px) 0,100% 3px,100% calc(100% - 3px),calc(100% - 3px) 100%,3px 100%,0 calc(100% - 3px))',
+      } }, lengthLabels[l]))
+    );
+
+    const historyItems = s.history.length === 0
+      ? React.createElement('div', { style:{ padding:'24px', fontFamily:'"JetBrains Mono",monospace', fontSize:'0.72rem', color:'#3a3a4a', textAlign:'center' } }, 'No emails generated yet.')
+      : React.createElement(React.Fragment, null,
+          s.history.map((item, idx) =>
+            React.createElement('div', {
+              key: item.id,
+              onClick: () => this.setState({ result: this.getMockEmail(item.subject, item.tone, item.length), generating: false }),
+              style: {
+                padding:'14px 20px', borderBottom: idx < s.history.length-1 ? '1px solid #2a2a3a' : 'none',
+                display:'flex', alignItems:'center', justifyContent:'space-between', gap:12,
+                cursor:'pointer', transition:'background 150ms',
+              },
+              onMouseEnter: e => e.currentTarget.style.background='#1c1c2e',
+              onMouseLeave: e => e.currentTarget.style.background='transparent',
+            },
+              React.createElement('div', { style:{ display:'flex', flexDirection:'column', gap:4 } },
+                React.createElement('div', { style:{ fontFamily:'"JetBrains Mono",monospace', fontSize:'0.76rem', color:'#e0e0e0' } }, item.subject),
+                React.createElement('div', { style:{ display:'flex', gap:12, fontFamily:'"Share Tech Mono",monospace', fontSize:'0.58rem', color:'#3a3a4a', letterSpacing:'0.08em' } },
+                  React.createElement('span', { style:{ color:'#00ff88' } }, item.tone),
+                  React.createElement('span', null, item.length),
+                  React.createElement('span', null, item.ts),
+                )
+              ),
+              React.createElement('span', { style:{ fontFamily:'"JetBrains Mono",monospace', fontSize:'0.65rem', color:'#3a3a4a' } }, '→')
+            )
+          )
+        );
+
+    return {
+      subject: s.subject,
+      tone: s.tone,
+      length: s.length,
+      tonePills,
+      lengthPills,
+      historyItems,
+      generating: s.generating,
+      hasResult: !!s.result,
+      isIdle: !s.generating && !s.result,
+      result: s.result || '',
+      copyLabel: s.copied ? 'COPIED ✓' : 'COPY',
+      genDisabled: !canGen,
+      genLabel: s.generating ? '// GENERATING...' : '// GENERATE EMAIL',
+      genBtnStyle: {
+        fontFamily:'"JetBrains Mono",monospace', fontSize:'0.76rem', fontWeight:700,
+        textTransform:'uppercase', letterSpacing:'0.2em', padding:'13px',
+        background:'#00ff88', color:'#0a0a0f', border:'none',
+        cursor: canGen ? 'pointer' : 'not-allowed',
+        opacity: canGen ? 1 : 0.35,
+        clipPath:'polygon(0 6px,6px 0,calc(100% - 6px) 0,100% 6px,100% calc(100% - 6px),calc(100% - 6px) 100%,6px 100%,0 calc(100% - 6px))',
+        width:'100%', transition:'all 150ms',
+        boxShadow: canGen ? '0 0 12px rgba(0,255,136,0.25)' : 'none',
+        animation: canGen ? 'pulse-glow 3s ease-in-out infinite' : 'none',
+      },
+      handleSubject: e => this.setState({ subject: e.target.value, result: null }),
+      handleGenerate: () => {
+        const st = this.state;
+        if (st.generating || st.subject.trim().length < 3) return;
+        this.setState({ generating:true, result:null, copied:false });
+        setTimeout(() => {
+          const r = this.getMockEmail(this.state.subject, this.state.tone, this.state.length);
+          const newItem = { id: Date.now(), subject: this.state.subject, tone: this.state.tone, length: this.state.length, ts: 'Just now' };
+          this.setState(prev => ({ generating:false, result:r, history: [newItem, ...prev.history].slice(0,10) }));
+        }, 1500);
+      },
+      handleCopy: () => {
+        if (!this.state.result) return;
+        navigator.clipboard.writeText(this.state.result)
+          .then(() => { this.setState({copied:true}); setTimeout(()=>this.setState({copied:false}),2000); })
+          .catch(()=>{});
+      },
+    };
+  }
+}
+</script>
+</body>
+</html>

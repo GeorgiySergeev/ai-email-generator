@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&amp;family=JetBrains+Mono:wght@300;400;500;700&amp;family=Share+Tech+Mono&amp;display=swap">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: #0a0a0f; color: #e0e0e0; min-height: 100vh; overflow-x: hidden; }
+    input, select { font-family: 'JetBrains Mono', monospace; background: #12121a; color: #00ff88; border: 1px solid #2a2a3a; outline: none; }
+    input:focus { border-color: #00ff88; box-shadow: 0 0 6px rgba(0,255,136,0.2); }
+    input::placeholder { color: #3a3a4a; }
+    ::-webkit-scrollbar { width: 3px; }
+    ::-webkit-scrollbar-thumb { background: #2a2a3a; }
+    @keyframes blink { 50% { opacity: 0; } }
+    @keyframes pulse-glow {
+      0%,100% { box-shadow: 0 0 5px #00ff88, 0 0 10px rgba(0,255,136,0.3); }
+      50%      { box-shadow: 0 0 14px #00ff88, 0 0 28px rgba(0,255,136,0.5); }
+    }
+    @keyframes rgb-shift {
+      0%,100% { text-shadow: -1px 0 #ff00ff, 1px 0 #00d4ff; }
+      50%      { text-shadow:  1px 0 #ff00ff,-1px 0 #00d4ff; }
+    }
+    @keyframes fade-up { from { opacity:0; transform:translateY(14px); } to { opacity:1; transform:translateY(0); } }
+    @media (max-width: 800px) {
+      #dash-layout { grid-template-columns: 1fr !important; }
+      #sidebar      { display: none !important; }
+      #profile-grid { grid-template-columns: 1fr !important; }
+    }
+  </style>
+</helmet>
+
+<!-- Scanlines -->
+<div style="position:fixed;inset:0;pointer-events:none;z-index:9990;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.055) 2px,rgba(0,0,0,0.055) 4px);"></div>
+
+<!-- Top bar -->
+<header style="position:sticky;top:0;z-index:200;height:56px;display:flex;align-items:center;background:rgba(10,10,15,0.95);backdrop-filter:blur(14px);border-bottom:1px solid #2a2a3a;padding:0 24px;">
+  <div style="display:flex;align-items:center;justify-content:space-between;width:100%;">
+    <a href="Landing.dc.html" style="font-family:'Orbitron',monospace;font-weight:900;font-size:0.9rem;color:#00ff88;text-decoration:none;letter-spacing:0.12em;animation:rgb-shift 3.5s ease-in-out infinite;">NEUR·O·MAIL</a>
+    <div style="display:flex;align-items:center;gap:20px;">
+      <span style="font-family:'Share Tech Mono',monospace;font-size:0.6rem;color:#3a3a4a;letter-spacing:0.1em;">STATUS: <span style="color:#00ff88;">■ ONLINE</span></span>
+      <div style="width:28px;height:28px;border-radius:50%;background:rgba(0,255,136,0.1);border:1px solid #00ff88;display:flex;align-items:center;justify-content:center;font-family:'Orbitron',monospace;font-size:0.65rem;color:#00ff88;box-shadow:0 0 6px rgba(0,255,136,0.2);">U</div>
+      <a href="Landing.dc.html" style="font-family:'JetBrains Mono',monospace;font-size:0.62rem;color:#6b7280;text-decoration:none;text-transform:uppercase;letter-spacing:0.12em;transition:color 120ms;" style-hover="color:#ff3366">logout</a>
+    </div>
+  </div>
+</header>
+
+<!-- Main layout -->
+<div id="dash-layout" style="display:grid;grid-template-columns:220px 1fr;min-height:calc(100vh - 56px);">
+
+  <!-- Sidebar -->
+  <aside id="sidebar" style="background:#12121a;border-right:1px solid #2a2a3a;padding:24px 0;display:flex;flex-direction:column;">
+    <nav style="display:flex;flex-direction:column;gap:2px;padding:0 12px;flex:1;">
+      <div style="font-family:'Share Tech Mono',monospace;font-size:0.55rem;color:#3a3a4a;letter-spacing:0.18em;text-transform:uppercase;padding:8px 12px;margin-bottom:4px;">NAVIGATION</div>
+      <a href="Landing.dc.html" style="font-family:'JetBrains Mono',monospace;font-size:0.72rem;color:#6b7280;text-decoration:none;padding:9px 12px;display:flex;align-items:center;gap:10px;transition:all 120ms;" style-hover="color:#e0e0e0;background:#1c1c2e;">
+        <span style="color:#3a3a4a;font-size:0.8rem;">⌂</span> Home
+      </a>
+      <a href="Dashboard.dc.html" style="font-family:'JetBrains Mono',monospace;font-size:0.72rem;color:#6b7280;text-decoration:none;padding:9px 12px;display:flex;align-items:center;gap:10px;transition:all 120ms;" style-hover="color:#e0e0e0;background:#1c1c2e;">
+        <span style="color:#3a3a4a;font-size:0.8rem;">⚡</span> Generator
+      </a>
+      <a href="Dashboard.dc.html#history" style="font-family:'JetBrains Mono',monospace;font-size:0.72rem;color:#6b7280;text-decoration:none;padding:9px 12px;display:flex;align-items:center;gap:10px;transition:all 120ms;" style-hover="color:#e0e0e0;background:#1c1c2e;">
+        <span style="color:#3a3a4a;font-size:0.8rem;">◷</span> History
+      </a>
+      <a href="Profile.dc.html" style="font-family:'JetBrains Mono',monospace;font-size:0.72rem;color:#00ff88;text-decoration:none;padding:9px 12px;display:flex;align-items:center;gap:10px;background:#1c1c2e;border-left:2px solid #00ff88;">
+        <span style="font-size:0.8rem;">◎</span> Profile
+      </a>
+    </nav>
+
+    <!-- Plan badge -->
+    <div style="padding:16px 24px;border-top:1px solid #2a2a3a;margin-top:auto;">
+      <div style="font-family:'Share Tech Mono',monospace;font-size:0.55rem;color:#3a3a4a;letter-spacing:0.14em;text-transform:uppercase;margin-bottom:8px;">PLAN // FREE</div>
+      <div style="background:#0a0a0f;height:4px;border-radius:1px;margin-bottom:6px;overflow:hidden;">
+        <div style="width:30%;height:100%;background:#00ff88;box-shadow:0 0 6px rgba(0,255,136,0.5);"></div>
+      </div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:0.62rem;color:#6b7280;">3 / 10 emails</div>
+      <a href="Pricing.dc.html" style="display:block;margin-top:12px;font-family:'JetBrains Mono',monospace;font-size:0.62rem;text-transform:uppercase;letter-spacing:0.12em;padding:7px;text-align:center;background:transparent;color:#00ff88;text-decoration:none;border:1px solid #00ff88;clip-path:polygon(0 4px,4px 0,calc(100% - 4px) 0,100% 4px,100% calc(100% - 4px),calc(100% - 4px) 100%,4px 100%,0 calc(100% - 4px));transition:all 150ms;" style-hover="background:rgba(0,255,136,0.08)">Upgrade →</a>
+    </div>
+  </aside>
+
+  <!-- Main content -->
+  <main style="padding:28px 32px;overflow-y:auto;">
+
+    <!-- Page header -->
+    <div style="margin-bottom:28px;">
+      <div style="font-family:'Share Tech Mono',monospace;font-size:0.58rem;color:#00ff88;letter-spacing:0.22em;text-transform:uppercase;margin-bottom:6px;">// USER_PROFILE</div>
+      <h1 style="font-family:'Orbitron',monospace;font-size:1.5rem;font-weight:900;text-transform:uppercase;letter-spacing:0.05em;color:#e0e0e0;">Profile Settings</h1>
+    </div>
+
+    <div id="profile-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start;">
+
+      <!-- Identity card -->
+      <div style="background:#12121a;border:1px solid #2a2a3a;clip-path:polygon(0 12px,12px 0,calc(100% - 12px) 0,100% 12px,100% calc(100% - 12px),calc(100% - 12px) 100%,12px 100%,0 calc(100% - 12px));overflow:hidden;animation:fade-up 0.4s ease both;">
+        <div style="background:#0a0a0f;border-bottom:1px solid #2a2a3a;padding:9px 16px;display:flex;align-items:center;gap:6px;">
+          <span style="width:7px;height:7px;border-radius:50%;background:#ff3366;display:block;"></span>
+          <span style="width:7px;height:7px;border-radius:50%;background:#ffcc00;display:block;"></span>
+          <span style="width:7px;height:7px;border-radius:50%;background:#00ff88;display:block;box-shadow:0 0 4px #00ff88;"></span>
+          <span style="margin-left:8px;font-family:'Share Tech Mono',monospace;font-size:0.57rem;color:#3a3a4a;letter-spacing:0.08em;">identity.cfg</span>
+        </div>
+        <div style="padding:24px;display:flex;flex-direction:column;gap:20px;">
+          <!-- Avatar row -->
+          <div style="display:flex;align-items:center;gap:20px;">
+            <div style="width:64px;height:64px;flex-shrink:0;border-radius:50%;background:rgba(0,255,136,0.08);border:2px solid #00ff88;display:flex;align-items:center;justify-content:center;font-family:'Orbitron',monospace;font-size:1.4rem;font-weight:900;color:#00ff88;box-shadow:0 0 14px rgba(0,255,136,0.2);">U</div>
+            <div>
+              <div style="font-family:'Orbitron',monospace;font-size:0.95rem;font-weight:700;color:#e0e0e0;letter-spacing:0.04em;margin-bottom:4px;">user@example.com</div>
+              <div style="font-family:'Share Tech Mono',monospace;font-size:0.58rem;color:#3a3a4a;letter-spacing:0.12em;">UID: NM-00042 · FREE PLAN</div>
+            </div>
+          </div>
+
+          <!-- Fields -->
+          <div style="display:flex;flex-direction:column;gap:14px;">
+            <div>
+              <div style="font-family:'Share Tech Mono',monospace;font-size:0.57rem;color:#6b7280;letter-spacing:0.14em;text-transform:uppercase;margin-bottom:7px;">DISPLAY NAME</div>
+              <div style="position:relative;">
+                <span style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:#00ff88;font-family:'JetBrains Mono',monospace;font-size:0.82rem;pointer-events:none;">></span>
+                <input type="text" value="{{ displayName }}" onChange="{{ handleName }}" placeholder="Enter display name" style="width:100%;padding:10px 10px 10px 30px;font-size:0.78rem;clip-path:polygon(0 4px,4px 0,calc(100% - 4px) 0,100% 4px,100% calc(100% - 4px),calc(100% - 4px) 100%,4px 100%,0 calc(100% - 4px));" />
+              </div>
+            </div>
+            <div>
+              <div style="font-family:'Share Tech Mono',monospace;font-size:0.57rem;color:#6b7280;letter-spacing:0.14em;text-transform:uppercase;margin-bottom:7px;">EMAIL ADDRESS</div>
+              <div style="position:relative;">
+                <span style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:#3a3a4a;font-family:'JetBrains Mono',monospace;font-size:0.82rem;pointer-events:none;">></span>
+                <input type="email" value="user@example.com" disabled="" style="width:100%;padding:10px 10px 10px 30px;font-size:0.78rem;color:#3a3a4a;clip-path:polygon(0 4px,4px 0,calc(100% - 4px) 0,100% 4px,100% calc(100% - 4px),calc(100% - 4px) 100%,4px 100%,0 calc(100% - 4px));cursor:not-allowed;" />
+              </div>
+              <div style="font-family:'JetBrains Mono',monospace;font-size:0.62rem;color:#3a3a4a;margin-top:5px;">// email cannot be changed</div>
+            </div>
+          </div>
+
+          <button onClick="{{ handleSaveName }}" style="{{ saveBtnStyle }}">{{ saveLabel }}</button>
+        </div>
+      </div>
+
+      <!-- Right column -->
+      <div style="display:flex;flex-direction:column;gap:24px;">
+
+        <!-- Plan card -->
+        <div style="background:#12121a;border:1px solid #2a2a3a;clip-path:polygon(0 12px,12px 0,calc(100% - 12px) 0,100% 12px,100% calc(100% - 12px),calc(100% - 12px) 100%,12px 100%,0 calc(100% - 12px));overflow:hidden;animation:fade-up 0.4s 0.08s ease both;">
+          <div style="background:#0a0a0f;border-bottom:1px solid #2a2a3a;padding:9px 16px;font-family:'Share Tech Mono',monospace;font-size:0.57rem;color:#3a3a4a;letter-spacing:0.08em;">subscription.status</div>
+          <div style="padding:20px 24px;display:flex;flex-direction:column;gap:14px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;">
+              <div>
+                <div style="font-family:'Orbitron',monospace;font-size:1rem;font-weight:900;color:#e0e0e0;letter-spacing:0.04em;">FREE PLAN</div>
+                <div style="font-family:'JetBrains Mono',monospace;font-size:0.7rem;color:#3a3a4a;margin-top:3px;">Active since Jun 2026</div>
+              </div>
+              <div style="font-family:'Share Tech Mono',monospace;font-size:0.58rem;color:#00ff88;letter-spacing:0.12em;background:rgba(0,255,136,0.08);border:1px solid rgba(0,255,136,0.25);padding:4px 10px;clip-path:polygon(0 3px,3px 0,calc(100% - 3px) 0,100% 3px,100% calc(100% - 3px),calc(100% - 3px) 100%,3px 100%,0 calc(100% - 3px));">ACTIVE</div>
+            </div>
+            <!-- Usage bar -->
+            <div>
+              <div style="display:flex;justify-content:space-between;margin-bottom:6px;">
+                <div style="font-family:'Share Tech Mono',monospace;font-size:0.57rem;color:#6b7280;letter-spacing:0.12em;text-transform:uppercase;">Monthly Usage</div>
+                <div style="font-family:'JetBrains Mono',monospace;font-size:0.65rem;color:#e0e0e0;">3 / 10</div>
+              </div>
+              <div style="background:#0a0a0f;height:5px;border-radius:1px;border:1px solid #2a2a3a;overflow:hidden;">
+                <div style="width:30%;height:100%;background:#00ff88;box-shadow:0 0 8px rgba(0,255,136,0.4);transition:width 600ms ease;"></div>
+              </div>
+              <div style="font-family:'JetBrains Mono',monospace;font-size:0.62rem;color:#3a3a4a;margin-top:5px;">7 emails remaining this month</div>
+            </div>
+            <a href="Pricing.dc.html" style="display:block;text-align:center;font-family:'JetBrains Mono',monospace;font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.16em;padding:10px;background:#00ff88;color:#0a0a0f;text-decoration:none;clip-path:polygon(0 4px,4px 0,calc(100% - 4px) 0,100% 4px,100% calc(100% - 4px),calc(100% - 4px) 100%,4px 100%,0 calc(100% - 4px));animation:pulse-glow 3s ease-in-out infinite;transition:filter 120ms;" style-hover="filter:brightness(1.1)">UPGRADE PLAN →</a>
+          </div>
+        </div>
+
+        <!-- Stats mini-grid -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1px;background:#2a2a3a;animation:fade-up 0.4s 0.14s ease both;">
+          <div style="background:#12121a;padding:18px 20px;">
+            <div style="font-family:'Orbitron',monospace;font-size:1.4rem;font-weight:900;color:#00ff88;text-shadow:0 0 10px rgba(0,255,136,0.35);margin-bottom:4px;">3</div>
+            <div style="font-family:'Share Tech Mono',monospace;font-size:0.57rem;color:#3a3a4a;text-transform:uppercase;letter-spacing:0.12em;">Emails this month</div>
+          </div>
+          <div style="background:#12121a;padding:18px 20px;">
+            <div style="font-family:'Orbitron',monospace;font-size:1.4rem;font-weight:900;color:#00d4ff;text-shadow:0 0 10px rgba(0,212,255,0.35);margin-bottom:4px;">3</div>
+            <div style="font-family:'Share Tech Mono',monospace;font-size:0.57rem;color:#3a3a4a;text-transform:uppercase;letter-spacing:0.12em;">Total emails</div>
+          </div>
+          <div style="background:#12121a;padding:18px 20px;">
+            <div style="font-family:'Orbitron',monospace;font-size:1.4rem;font-weight:900;color:#ff00ff;text-shadow:0 0 10px rgba(255,0,255,0.3);margin-bottom:4px;">Pro</div>
+            <div style="font-family:'Share Tech Mono',monospace;font-size:0.57rem;color:#3a3a4a;text-transform:uppercase;letter-spacing:0.12em;">Fav tone</div>
+          </div>
+          <div style="background:#12121a;padding:18px 20px;">
+            <div style="font-family:'Orbitron',monospace;font-size:1.4rem;font-weight:900;color:#00ff88;text-shadow:0 0 10px rgba(0,255,136,0.35);margin-bottom:4px;">1.2s</div>
+            <div style="font-family:'Share Tech Mono',monospace;font-size:0.57rem;color:#3a3a4a;text-transform:uppercase;letter-spacing:0.12em;">Avg gen time</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Password section -->
+      <div style="background:#12121a;border:1px solid #2a2a3a;clip-path:polygon(0 12px,12px 0,calc(100% - 12px) 0,100% 12px,100% calc(100% - 12px),calc(100% - 12px) 100%,12px 100%,0 calc(100% - 12px));overflow:hidden;animation:fade-up 0.4s 0.18s ease both;">
+        <div style="background:#0a0a0f;border-bottom:1px solid #2a2a3a;padding:9px 16px;font-family:'Share Tech Mono',monospace;font-size:0.57rem;color:#3a3a4a;letter-spacing:0.08em;">security.cfg</div>
+        <div style="padding:24px;display:flex;flex-direction:column;gap:14px;">
+          <div style="font-family:'Share Tech Mono',monospace;font-size:0.58rem;color:#6b7280;letter-spacing:0.14em;text-transform:uppercase;">CHANGE PASSWORD</div>
+          <div>
+            <div style="font-family:'Share Tech Mono',monospace;font-size:0.57rem;color:#6b7280;letter-spacing:0.14em;text-transform:uppercase;margin-bottom:7px;">CURRENT PASSWORD</div>
+            <div style="position:relative;">
+              <span style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:#00ff88;font-family:'JetBrains Mono',monospace;font-size:0.82rem;pointer-events:none;">></span>
+              <input type="password" value="{{ pwCurrent }}" onChange="{{ handlePwCurrent }}" placeholder="current password" style="width:100%;padding:10px 10px 10px 30px;font-size:0.78rem;clip-path:polygon(0 4px,4px 0,calc(100% - 4px) 0,100% 4px,100% calc(100% - 4px),calc(100% - 4px) 100%,4px 100%,0 calc(100% - 4px));" />
+            </div>
+          </div>
+          <div>
+            <div style="font-family:'Share Tech Mono',monospace;font-size:0.57rem;color:#6b7280;letter-spacing:0.14em;text-transform:uppercase;margin-bottom:7px;">NEW PASSWORD</div>
+            <div style="position:relative;">
+              <span style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:#00ff88;font-family:'JetBrains Mono',monospace;font-size:0.82rem;pointer-events:none;">></span>
+              <input type="password" value="{{ pwNew }}" onChange="{{ handlePwNew }}" placeholder="min. 8 characters" style="width:100%;padding:10px 10px 10px 30px;font-size:0.78rem;clip-path:polygon(0 4px,4px 0,calc(100% - 4px) 0,100% 4px,100% calc(100% - 4px),calc(100% - 4px) 100%,4px 100%,0 calc(100% - 4px));" />
+            </div>
+          </div>
+          <sc-if value="{{ pwError }}" hint-placeholder-val="{{ false }}">
+            <div style="font-family:'JetBrains Mono',monospace;font-size:0.68rem;color:#ff3366;">ERR: {{ pwErrorMsg }}</div>
+          </sc-if>
+          <button onClick="{{ handleSavePw }}" style="{{ savePwBtnStyle }}">{{ savePwLabel }}</button>
+        </div>
+      </div>
+
+      <!-- Danger zone -->
+      <div style="background:#12121a;border:1px solid rgba(255,51,102,0.25);clip-path:polygon(0 12px,12px 0,calc(100% - 12px) 0,100% 12px,100% calc(100% - 12px),calc(100% - 12px) 100%,12px 100%,0 calc(100% - 12px));overflow:hidden;animation:fade-up 0.4s 0.22s ease both;">
+        <div style="background:#0a0a0f;border-bottom:1px solid rgba(255,51,102,0.2);padding:9px 16px;font-family:'Share Tech Mono',monospace;font-size:0.57rem;color:#ff3366;letter-spacing:0.08em;opacity:0.7;">danger_zone.cfg</div>
+        <div style="padding:20px 24px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;">
+          <div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:0.78rem;color:#e0e0e0;margin-bottom:4px;">Delete Account</div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:0.68rem;color:#3a3a4a;line-height:1.6;">Permanently erase all data. This cannot be undone.</div>
+          </div>
+          <button onClick="{{ handleDelete }}" style="font-family:'JetBrains Mono',monospace;font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:0.14em;padding:9px 20px;background:transparent;color:#ff3366;border:1px solid rgba(255,51,102,0.4);clip-path:polygon(0 4px,4px 0,calc(100% - 4px) 0,100% 4px,100% calc(100% - 4px),calc(100% - 4px) 100%,4px 100%,0 calc(100% - 4px));cursor:pointer;transition:all 150ms;white-space:nowrap;" style-hover="background:rgba(255,51,102,0.08);border-color:#ff3366;">DELETE ACCOUNT</button>
+        </div>
+      </div>
+
+    </div>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = {
+    displayName: '',
+    saveLabel: '// SAVE CHANGES',
+    savePwLabel: '// UPDATE PASSWORD',
+    pwCurrent: '',
+    pwNew: '',
+    pwError: false,
+    pwErrorMsg: '',
+  };
+
+  renderVals() {
+    const s = this.state;
+    const canSave = s.displayName.trim().length >= 2;
+    const canSavePw = s.pwCurrent.length >= 8 && s.pwNew.length >= 8;
+
+    const saveBtnStyle = {
+      fontFamily:'"JetBrains Mono",monospace', fontSize:'0.76rem', fontWeight:700,
+      textTransform:'uppercase', letterSpacing:'0.18em', padding:'11px',
+      background: canSave ? '#00ff88' : 'transparent',
+      color: canSave ? '#0a0a0f' : '#3a3a4a',
+      border: canSave ? 'none' : '1px solid #2a2a3a',
+      cursor: canSave ? 'pointer' : 'not-allowed',
+      opacity: canSave ? 1 : 0.45,
+      clipPath:'polygon(0 5px,5px 0,calc(100% - 5px) 0,100% 5px,100% calc(100% - 5px),calc(100% - 5px) 100%,5px 100%,0 calc(100% - 5px))',
+      width:'100%', transition:'all 150ms',
+      boxShadow: canSave ? '0 0 10px rgba(0,255,136,0.22)' : 'none',
+    };
+
+    const savePwBtnStyle = {
+      fontFamily:'"JetBrains Mono",monospace', fontSize:'0.76rem', fontWeight:700,
+      textTransform:'uppercase', letterSpacing:'0.18em', padding:'11px',
+      background: canSavePw ? '#00ff88' : 'transparent',
+      color: canSavePw ? '#0a0a0f' : '#3a3a4a',
+      border: canSavePw ? 'none' : '1px solid #2a2a3a',
+      cursor: canSavePw ? 'pointer' : 'not-allowed',
+      opacity: canSavePw ? 1 : 0.45,
+      clipPath:'polygon(0 5px,5px 0,calc(100% - 5px) 0,100% 5px,100% calc(100% - 5px),calc(100% - 5px) 100%,5px 100%,0 calc(100% - 5px))',
+      width:'100%', transition:'all 150ms',
+      boxShadow: canSavePw ? '0 0 10px rgba(0,255,136,0.22)' : 'none',
+    };
+
+    return {
+      displayName: s.displayName,
+      pwCurrent: s.pwCurrent,
+      pwNew: s.pwNew,
+      pwError: s.pwError,
+      pwErrorMsg: s.pwErrorMsg,
+      saveLabel: s.saveLabel,
+      savePwLabel: s.savePwLabel,
+      saveBtnStyle,
+      savePwBtnStyle,
+      handleName: e => this.setState({ displayName: e.target.value }),
+      handlePwCurrent: e => this.setState({ pwCurrent: e.target.value, pwError: false }),
+      handlePwNew: e => this.setState({ pwNew: e.target.value, pwError: false }),
+      handleSaveName: () => {
+        if (!canSave) return;
+        this.setState({ saveLabel: '// SAVED ✓' });
+        setTimeout(() => this.setState({ saveLabel: '// SAVE CHANGES' }), 2000);
+      },
+      handleSavePw: () => {
+        if (!canSavePw) return;
+        if (s.pwNew.length < 8) { this.setState({ pwError:true, pwErrorMsg:'New password must be at least 8 characters.' }); return; }
+        this.setState({ savePwLabel: '// PASSWORD UPDATED ✓', pwCurrent:'', pwNew:'', pwError:false });
+        setTimeout(() => this.setState({ savePwLabel: '// UPDATE PASSWORD' }), 2200);
+      },
+      handleDelete: () => {
+        if (window.confirm('CONFIRM DELETION\n\nThis will permanently erase your account and all data. This action cannot be undone.')) {
+          window.location.href = 'Landing.dc.html';
+        }
+      },
+    };
+  }
+}
+</script>
+</body>
+</html>

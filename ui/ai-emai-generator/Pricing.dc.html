@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&amp;family=JetBrains+Mono:wght@300;400;500;700&amp;family=Share+Tech+Mono&amp;display=swap">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { background: #0a0a0f; color: #e0e0e0; overflow-x: hidden; }
+    ::-webkit-scrollbar { width: 3px; }
+    ::-webkit-scrollbar-thumb { background: #00ff88; }
+    @keyframes pulse-glow {
+      0%,100% { box-shadow: 0 0 5px #00ff88, 0 0 10px rgba(0,255,136,0.35); }
+      50%      { box-shadow: 0 0 14px #00ff88, 0 0 28px rgba(0,255,136,0.55); }
+    }
+    @keyframes rgb-shift {
+      0%,100% { text-shadow: -1px 0 #ff00ff, 1px 0 #00d4ff; }
+      50%      { text-shadow:  1px 0 #ff00ff,-1px 0 #00d4ff; }
+    }
+    @keyframes blink { 50% { opacity: 0; } }
+    @keyframes fade-up { from { opacity:0; transform:translateY(18px); } to { opacity:1; transform:translateY(0); } }
+    @media (max-width: 860px) {
+      #price-grid { grid-template-columns: 1fr !important; max-width: 400px; }
+      #compare-table th, #compare-table td { font-size: 0.65rem !important; padding: 11px 10px !important; }
+      #nav-links { display: none !important; }
+    }
+  </style>
+</helmet>
+
+<!-- Scanlines -->
+<div style="position:fixed;inset:0;pointer-events:none;z-index:9990;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.06) 2px,rgba(0,0,0,0.06) 4px);"></div>
+
+<!-- NAV -->
+<nav style="position:sticky;top:0;z-index:500;height:58px;display:flex;align-items:center;background:rgba(10,10,15,0.93);backdrop-filter:blur(16px);border-bottom:1px solid #2a2a3a;padding:0 clamp(16px,5vw,60px);">
+  <div style="max-width:1240px;width:100%;margin:0 auto;display:flex;align-items:center;justify-content:space-between;">
+    <a href="Landing.dc.html" style="font-family:'Orbitron',monospace;font-weight:900;font-size:0.95rem;color:#00ff88;text-decoration:none;letter-spacing:0.12em;animation:rgb-shift 3.5s ease-in-out infinite;">NEUR·O·MAIL</a>
+    <div id="nav-links" style="display:flex;align-items:center;gap:28px;">
+      <a href="Landing.dc.html#features" style="font-family:'JetBrains Mono',monospace;font-size:0.67rem;color:#6b7280;text-decoration:none;text-transform:uppercase;letter-spacing:0.14em;transition:color 120ms;" style-hover="color:#e0e0e0">//features</a>
+      <a href="Landing.dc.html#demo"     style="font-family:'JetBrains Mono',monospace;font-size:0.67rem;color:#6b7280;text-decoration:none;text-transform:uppercase;letter-spacing:0.14em;transition:color 120ms;" style-hover="color:#e0e0e0">//demo</a>
+      <a href="Pricing.dc.html"          style="font-family:'JetBrains Mono',monospace;font-size:0.67rem;color:#00ff88;text-decoration:none;text-transform:uppercase;letter-spacing:0.14em;">//pricing</a>
+      <a href="Auth.dc.html"             style="font-family:'JetBrains Mono',monospace;font-size:0.67rem;color:#6b7280;text-decoration:none;text-transform:uppercase;letter-spacing:0.14em;transition:color 120ms;" style-hover="color:#e0e0e0">login</a>
+      <a href="Auth.dc.html"             style="font-family:'JetBrains Mono',monospace;font-size:0.67rem;font-weight:700;color:#0a0a0f;text-decoration:none;text-transform:uppercase;letter-spacing:0.14em;background:#00ff88;padding:7px 18px;clip-path:polygon(0 5px,5px 0,calc(100% - 5px) 0,100% 5px,100% calc(100% - 5px),calc(100% - 5px) 100%,5px 100%,0 calc(100% - 5px));transition:filter 120ms;" style-hover="filter:brightness(1.1)">get_access →</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section style="padding:72px clamp(16px,5vw,60px) 56px;text-align:center;position:relative;overflow:hidden;">
+  <div style="position:absolute;inset:0;background-image:linear-gradient(rgba(0,255,136,0.018) 1px,transparent 1px),linear-gradient(90deg,rgba(0,255,136,0.018) 1px,transparent 1px);background-size:50px 50px;pointer-events:none;"></div>
+  <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:600px;height:300px;background:radial-gradient(ellipse,rgba(0,255,136,0.04) 0%,transparent 70%);pointer-events:none;"></div>
+  <div style="position:relative;z-index:1;animation:fade-up 0.5s ease both;">
+    <div style="font-family:'Share Tech Mono',monospace;font-size:0.6rem;color:#00ff88;letter-spacing:0.24em;text-transform:uppercase;margin-bottom:12px;">// 04_ACCESS_PASSES</div>
+    <h1 style="font-family:'Orbitron',monospace;font-size:clamp(2rem,5vw,3.4rem);font-weight:900;text-transform:uppercase;letter-spacing:0.05em;color:#e0e0e0;margin-bottom:14px;line-height:1.1;">CHOOSE YOUR<br /><span style="color:#00ff88;text-shadow:-1px 0 #ff00ff,1px 0 #00d4ff;">ACCESS LEVEL</span></h1>
+    <p style="font-family:'JetBrains Mono',monospace;font-size:0.85rem;color:#6b7280;max-width:480px;margin:0 auto;line-height:1.85;">Start free. Upgrade when you need more. No hidden fees, no lock-in. Cancel any time.</p>
+
+    <!-- Billing toggle -->
+    <div style="display:flex;align-items:center;justify-content:center;gap:14px;margin-top:30px;">
+      <span style="font-family:'JetBrains Mono',monospace;font-size:0.72rem;color:{{ billMonthlyColor }};">Monthly</span>
+      <button onClick="{{ toggleBilling }}" style="{{ toggleStyle }}">
+        <span style="{{ toggleKnob }}"></span>
+      </button>
+      <span style="font-family:'JetBrains Mono',monospace;font-size:0.72rem;color:{{ billAnnualColor }};">Annual <span style="font-family:'Share Tech Mono',monospace;font-size:0.6rem;color:#00ff88;letter-spacing:0.1em;background:rgba(0,255,136,0.1);border:1px solid rgba(0,255,136,0.25);padding:2px 8px;">SAVE 20%</span></span>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING CARDS -->
+<section style="padding:0 clamp(16px,5vw,60px) 72px;">
+  <div style="max-width:1100px;margin:0 auto;">
+    <div id="price-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:22px;align-items:start;margin:0 auto;">
+
+      <!-- Starter -->
+      <div style="background:#12121a;border:1px solid #2a2a3a;clip-path:polygon(0 14px,14px 0,calc(100% - 14px) 0,100% 14px,100% calc(100% - 14px),calc(100% - 14px) 100%,14px 100%,0 calc(100% - 14px));padding:32px 28px;display:flex;flex-direction:column;gap:0;transition:border-color 200ms;" style-hover="border-color:#6b7280;">
+        <div style="font-family:'Share Tech Mono',monospace;font-size:0.58rem;color:#6b7280;letter-spacing:0.22em;text-transform:uppercase;margin-bottom:16px;">STARTER</div>
+        <div style="font-family:'Orbitron',monospace;font-size:2.2rem;font-weight:900;color:#e0e0e0;line-height:1;margin-bottom:4px;">$0<span style="font-size:0.9rem;color:#6b7280;font-family:'JetBrains Mono',monospace;">/mo</span></div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:0.7rem;color:#3a3a4a;margin-bottom:26px;">Free forever · no card</div>
+        <div style="height:1px;background:#2a2a3a;margin-bottom:22px;"></div>
+        <div style="display:flex;flex-direction:column;gap:11px;margin-bottom:32px;flex:1;">
+          <div style="font-family:'JetBrains Mono',monospace;font-size:0.73rem;color:#6b7280;display:flex;gap:10px;align-items:flex-start;"><span style="color:#3a3a4a;flex-shrink:0;margin-top:1px;">→</span><span><strong style="color:#e0e0e0;">10 emails</strong> per month</span></div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:0.73rem;color:#6b7280;display:flex;gap:10px;align-items:flex-start;"><span style="color:#3a3a4a;flex-shrink:0;margin-top:1px;">→</span><span><strong style="color:#e0e0e0;">3 tone modes</strong></span></div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:0.73rem;color:#6b7280;display:flex;gap:10px;align-items:flex-start;"><span style="color:#3a3a4a;flex-shrink:0;margin-top:1px;">→</span><span>7-day history</span></div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:0.73rem;color:#6b7280;display:flex;gap:10px;align-items:flex-start;"><span style="color:#3a3a4a;flex-shrink:0;margin-top:1px;">→</span><span>Email support</span></div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:0.73rem;color:#3a3a4a;display:flex;gap:10px;align-items:flex-start;"><span style="flex-shrink:0;margin-top:1px;">✕</span><span>No API access</span></div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:0.73rem;color:#3a3a4a;display:flex;gap:10px;align-items:flex-start;"><span style="flex-shrink:0;margin-top:1px;">✕</span><span>No custom tones</span></div>
+        </div>
+        <a href="Auth.dc.html" style="display:block;text-align:center;font-family:'JetBrains Mono',monospace;font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.16em;padding:12px;background:transparent;color:#6b7280;text-decoration:none;border:1px solid #2a2a3a;clip-path:polygon(0 5px,5px 0,calc(100% - 5px) 0,100% 5px,100% calc(100% - 5px),calc(100% - 5px) 100%,5px 100%,0 calc(100% - 5px));transition:all 150ms;" style-hover="border-color:#6b7280;color:#e0e0e0;">START FREE</a>
+      </div>
+
+      <!-- Pro -->
+      <div style="background:#0a0a0f;border:2px solid #00ff88;clip-path:polygon(0 14px,14px 0,calc(100% - 14px) 0,100% 14px,100% calc(100% - 14px),calc(100% - 14px) 100%,14px 100%,0 calc(100% - 14px));padding:32px 28px;display:flex;flex-direction:column;gap:0;position:relative;box-shadow:0 0 30px rgba(0,255,136,0.08);">
+        <div style="position:absolute;top:-1px;left:50%;transform:translateX(-50%);background:#00ff88;color:#0a0a0f;font-family:'Share Tech Mono',monospace;font-size:0.52rem;letter-spacing:0.18em;text-transform:uppercase;padding:3px 16px;white-space:nowrap;">RECOMMENDED</div>
+        <div style="font-family:'Share Tech Mono',monospace;font-size:0.58rem;color:#00ff88;letter-spacing:0.22em;text-transform:uppercase;margin-bottom:16px;margin-top:12px;">PROFESSIONAL</div>
+        <div style="font-family:'Orbitron',monospace;font-size:2.2rem;font-weight:900;color:#00ff88;line-height:1;margin-bottom:4px;text-shadow:0 0 12px rgba(0,255,136,0.35);">{{ proPriceDisplay }}<span style="font-size:0.9rem;color:#6b7280;font-family:'JetBrains Mono',monospace;">/mo</span></div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:0.7rem;color:#3a3a4a;margin-bottom:26px;">{{ proBillingNote }}</div>
+        <div style="height:1px;background:#2a2a3a;margin-bottom:22px;"></div>
+        <div style="display:flex;flex-direction:column;gap:11px;margin-bottom:32px;flex:1;">
+          <div style="font-family:'JetBrains Mono',monospace;font-size:0.73rem;color:#e0e0e0;display:flex;gap:10px;align-items:flex-start;"><span style="color:#00ff88;flex-shrink:0;margin-top:1px;">→</span><span><strong>Unlimited emails</strong></span></div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:0.73rem;color:#e0e0e0;display:flex;gap:10px;align-items:flex-start;"><span style="color:#00ff88;flex-shrink:0;margin-top:1px;">→</span><span><strong>All 5 tone modes</strong></span></div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:0.73rem;color:#e0e0e0;display:flex;gap:10px;align-items:flex-start;"><span style="color:#00ff88;flex-shrink:0;margin-top:1px;">→</span><span>Unlimited history</span></div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:0.73rem;color:#e0e0e0;display:flex;gap:10px;align-items:flex-start;"><span style="color:#00ff88;flex-shrink:0;margin-top:1px;">→</span><span>Priority support</span></div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:0.73rem;color:#e0e0e0;display:flex;gap:10px;align-items:flex-start;"><span style="color:#00ff88;flex-shrink:0;margin-top:1px;">→</span><span>Export to .txt / .eml</span></div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:0.73rem;color:#3a3a4a;display:flex;gap:10px;align-items:flex-start;"><span style="flex-shrink:0;margin-top:1px;">✕</span><span>No API access</span></div>
+        </div>
+        <a href="Auth.dc.html" style="display:block;text-align:center;font-family:'JetBrains Mono',monospace;font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.16em;padding:12px;background:#00ff88;color:#0a0a0f;text-decoration:none;clip-path:polygon(0 5px,5px 0,calc(100% - 5px) 0,100% 5px,100% calc(100% - 5px),calc(100% - 5px) 100%,5px 100%,0 calc(100% - 5px));animation:pulse-glow 3s ease-in-out infinite;transition:filter 120ms;" style-hover="filter:brightness(1.1)">GET STARTED</a>
+      </div>
+
+      <!-- Enterprise -->
+      <div style="background:#12121a;border:1px solid #2a2a3a;clip-path:polygon(0 14px,14px 0,calc(100% - 14px) 0,100% 14px,100% calc(100% - 14px),calc(100% - 14px) 100%,14px 100%,0 calc(100% - 14px));padding:32px 28px;display:flex;flex-direction:column;gap:0;transition:border-color 200ms;" style-hover="border-color:#ff00ff;">
+        <div style="font-family:'Share Tech Mono',monospace;font-size:0.58rem;color:#ff00ff;letter-spacing:0.22em;text-transform:uppercase;margin-bottom:16px;">ENTERPRISE</div>
+        <div style="font-family:'Orbitron',monospace;font-size:2.2rem;font-weight:900;color:#e0e0e0;line-height:1;margin-bottom:4px;">{{ entPriceDisplay }}<span style="font-size:0.9rem;color:#6b7280;font-family:'JetBrains Mono',monospace;">/mo</span></div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:0.7rem;color:#3a3a4a;margin-bottom:26px;">{{ entBillingNote }}</div>
+        <div style="height:1px;background:#2a2a3a;margin-bottom:22px;"></div>
+        <div style="display:flex;flex-direction:column;gap:11px;margin-bottom:32px;flex:1;">
+          <div style="font-family:'JetBrains Mono',monospace;font-size:0.73rem;color:#6b7280;display:flex;gap:10px;align-items:flex-start;"><span style="color:#ff00ff;flex-shrink:0;margin-top:1px;">→</span><span>Everything in Pro</span></div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:0.73rem;color:#6b7280;display:flex;gap:10px;align-items:flex-start;"><span style="color:#ff00ff;flex-shrink:0;margin-top:1px;">→</span><span><strong style="color:#e0e0e0;">REST API access</strong></span></div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:0.73rem;color:#6b7280;display:flex;gap:10px;align-items:flex-start;"><span style="color:#ff00ff;flex-shrink:0;margin-top:1px;">→</span><span><strong style="color:#e0e0e0;">Custom tone training</strong></span></div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:0.73rem;color:#6b7280;display:flex;gap:10px;align-items:flex-start;"><span style="color:#ff00ff;flex-shrink:0;margin-top:1px;">→</span><span>Up to 10 team seats</span></div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:0.73rem;color:#6b7280;display:flex;gap:10px;align-items:flex-start;"><span style="color:#ff00ff;flex-shrink:0;margin-top:1px;">→</span><span>99.9% SLA guarantee</span></div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:0.73rem;color:#6b7280;display:flex;gap:10px;align-items:flex-start;"><span style="color:#ff00ff;flex-shrink:0;margin-top:1px;">→</span><span>Dedicated account manager</span></div>
+        </div>
+        <a href="Auth.dc.html" style="display:block;text-align:center;font-family:'JetBrains Mono',monospace;font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.16em;padding:12px;background:transparent;color:#ff00ff;text-decoration:none;border:1px solid #ff00ff;clip-path:polygon(0 5px,5px 0,calc(100% - 5px) 0,100% 5px,100% calc(100% - 5px),calc(100% - 5px) 100%,5px 100%,0 calc(100% - 5px));transition:all 150ms;" style-hover="background:rgba(255,0,255,0.07);box-shadow:0 0 10px rgba(255,0,255,0.2);">CONTACT SALES</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COMPARISON TABLE -->
+<section style="padding:0 clamp(16px,5vw,60px) 72px;">
+  <div style="max-width:1100px;margin:0 auto;">
+    <div style="font-family:'Share Tech Mono',monospace;font-size:0.6rem;color:#00ff88;letter-spacing:0.24em;text-transform:uppercase;margin-bottom:10px;">// COMPARE</div>
+    <h2 style="font-family:'Orbitron',monospace;font-size:clamp(1.3rem,2.5vw,1.9rem);font-weight:900;text-transform:uppercase;letter-spacing:0.06em;color:#e0e0e0;margin-bottom:28px;">FULL_SPEC_MATRIX</h2>
+    <div style="overflow-x:auto;">
+      <table id="compare-table" style="width:100%;border-collapse:collapse;border:1px solid #2a2a3a;">
+        <thead>
+          <tr style="background:#12121a;border-bottom:1px solid #2a2a3a;">
+            <th style="text-align:left;padding:14px 20px;font-family:'Share Tech Mono',monospace;font-size:0.62rem;color:#3a3a4a;letter-spacing:0.14em;text-transform:uppercase;font-weight:400;">FEATURE</th>
+            <th style="text-align:center;padding:14px 20px;font-family:'Share Tech Mono',monospace;font-size:0.62rem;color:#6b7280;letter-spacing:0.14em;text-transform:uppercase;font-weight:400;">STARTER</th>
+            <th style="text-align:center;padding:14px 20px;font-family:'Share Tech Mono',monospace;font-size:0.62rem;color:#00ff88;letter-spacing:0.14em;text-transform:uppercase;font-weight:400;background:rgba(0,255,136,0.03);">PRO</th>
+            <th style="text-align:center;padding:14px 20px;font-family:'Share Tech Mono',monospace;font-size:0.62rem;color:#ff00ff;letter-spacing:0.14em;text-transform:uppercase;font-weight:400;">ENTERPRISE</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{ tableRows }}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section style="padding:0 clamp(16px,5vw,60px) 72px;">
+  <div style="max-width:760px;margin:0 auto;">
+    <div style="font-family:'Share Tech Mono',monospace;font-size:0.6rem;color:#00ff88;letter-spacing:0.24em;text-transform:uppercase;margin-bottom:10px;">// PRICING_FAQ</div>
+    <h2 style="font-family:'Orbitron',monospace;font-size:clamp(1.3rem,2.5vw,1.9rem);font-weight:900;text-transform:uppercase;letter-spacing:0.06em;color:#e0e0e0;margin-bottom:32px;">HELP_DATABASE</h2>
+    <div style="display:flex;flex-direction:column;border:1px solid #2a2a3a;">
+      <div style="border-bottom:1px solid #2a2a3a;">
+        <button onClick="{{ toggleFaq0 }}" style="{{ faqBtn0 }}"><span>Can I switch plans at any time?</span><span>{{ faqIcon0 }}</span></button>
+        <sc-if value="{{ faqOpen0 }}" hint-placeholder-val="{{ false }}"><div style="padding:0 20px 18px;font-family:'JetBrains Mono',monospace;font-size:0.76rem;color:#6b7280;line-height:1.8;">Yes. Upgrade or downgrade at any time from your profile settings. Upgrades apply immediately; downgrades take effect at the start of the next billing cycle.</div></sc-if>
+      </div>
+      <div style="border-bottom:1px solid #2a2a3a;">
+        <button onClick="{{ toggleFaq1 }}" style="{{ faqBtn1 }}"><span>What happens to my emails if I downgrade?</span><span>{{ faqIcon1 }}</span></button>
+        <sc-if value="{{ faqOpen1 }}" hint-placeholder-val="{{ false }}"><div style="padding:0 20px 18px;font-family:'JetBrains Mono',monospace;font-size:0.76rem;color:#6b7280;line-height:1.8;">Your history is preserved for 30 days after downgrading. If you re-upgrade within that window, everything is restored instantly. After 30 days, older items are purged to comply with our data retention policy.</div></sc-if>
+      </div>
+      <div style="border-bottom:1px solid #2a2a3a;">
+        <button onClick="{{ toggleFaq2 }}" style="{{ faqBtn2 }}"><span>Is there a free trial for Pro?</span><span>{{ faqIcon2 }}</span></button>
+        <sc-if value="{{ faqOpen2 }}" hint-placeholder-val="{{ false }}"><div style="padding:0 20px 18px;font-family:'JetBrains Mono',monospace;font-size:0.76rem;color:#6b7280;line-height:1.8;">New accounts get a 7-day Pro trial automatically — no credit card required to start. You'll be prompted to add a payment method before day 7 if you want to continue. Cancel anytime before and you won't be charged.</div></sc-if>
+      </div>
+      <div>
+        <button onClick="{{ toggleFaq3 }}" style="{{ faqBtn3 }}"><span>How does annual billing work?</span><span>{{ faqIcon3 }}</span></button>
+        <sc-if value="{{ faqOpen3 }}" hint-placeholder-val="{{ false }}"><div style="padding:0 20px 18px;font-family:'JetBrains Mono',monospace;font-size:0.76rem;color:#6b7280;line-height:1.8;">Annual plans are charged once per year and give you the equivalent of 2 months free (20% off). You can request a prorated refund within 14 days of the annual charge if you change your mind.</div></sc-if>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section style="padding:80px clamp(16px,5vw,60px);text-align:center;background:#12121a;border-top:1px solid #2a2a3a;position:relative;overflow:hidden;">
+  <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:500px;height:300px;background:radial-gradient(ellipse,rgba(0,255,136,0.05) 0%,transparent 70%);pointer-events:none;"></div>
+  <div style="position:relative;z-index:1;">
+    <div style="font-family:'Share Tech Mono',monospace;font-size:0.6rem;color:#00ff88;letter-spacing:0.24em;text-transform:uppercase;margin-bottom:16px;">// INITIATE_LAUNCH</div>
+    <h2 style="font-family:'Orbitron',monospace;font-size:clamp(1.6rem,4vw,2.6rem);font-weight:900;text-transform:uppercase;letter-spacing:0.05em;color:#e0e0e0;margin-bottom:12px;">START FOR FREE.<br />SCALE WHEN READY.</h2>
+    <p style="font-family:'JetBrains Mono',monospace;font-size:0.82rem;color:#6b7280;max-width:400px;margin:0 auto 32px;line-height:1.85;">No credit card required. Live in 30 seconds.</p>
+    <a href="Auth.dc.html" style="display:inline-block;font-family:'JetBrains Mono',monospace;font-size:0.82rem;font-weight:700;text-transform:uppercase;letter-spacing:0.2em;padding:14px 36px;background:#00ff88;color:#0a0a0f;text-decoration:none;clip-path:polygon(0 8px,8px 0,calc(100% - 8px) 0,100% 8px,100% calc(100% - 8px),calc(100% - 8px) 100%,8px 100%,0 calc(100% - 8px));animation:pulse-glow 2.5s ease-in-out infinite;transition:filter 120ms;" style-hover="filter:brightness(1.1)">GET_ACCESS_FREE →</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer style="background:#0a0a0f;border-top:1px solid #2a2a3a;padding:28px clamp(16px,5vw,60px);">
+  <div style="max-width:1100px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
+    <div style="font-family:'Orbitron',monospace;font-weight:900;font-size:0.85rem;color:#00ff88;letter-spacing:0.12em;animation:rgb-shift 3.5s ease-in-out infinite;">NEUR·O·MAIL</div>
+    <div style="font-family:'Share Tech Mono',monospace;font-size:0.58rem;color:#3a3a4a;letter-spacing:0.1em;">© 2026 · <a href="Landing.dc.html" style="color:#3a3a4a;text-decoration:none;transition:color 120ms;" style-hover="color:#6b7280">Home</a> · <a href="#" style="color:#3a3a4a;text-decoration:none;transition:color 120ms;" style-hover="color:#6b7280">Privacy</a> · <a href="#" style="color:#3a3a4a;text-decoration:none;transition:color 120ms;" style-hover="color:#6b7280">Terms</a></div>
+  </div>
+</footer>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = {
+    annual: false,
+    faq: [false, false, false, false],
+  };
+
+  tableData() {
+    const ck = (color='#00ff88') => `<span style="color:${color};font-size:1rem;">✓</span>`;
+    const cx = `<span style="color:#3a3a4a;font-size:0.85rem;">✕</span>`;
+    return [
+      { label:'Emails per month',         s:'10',       p:'Unlimited', e:'Unlimited'         },
+      { label:'Tone modes',                s:'3 of 5',   p:'All 5',     e:'All 5 + custom'    },
+      { label:'History retention',         s:'7 days',   p:'Unlimited', e:'Unlimited'         },
+      { label:'Export (.txt / .eml)',       s:cx,         p:ck(),        e:ck()               },
+      { label:'Priority support',          s:cx,         p:ck(),        e:ck()               },
+      { label:'REST API access',           s:cx,         p:cx,          e:ck('#ff00ff')       },
+      { label:'Custom tone training',      s:cx,         p:cx,          e:ck('#ff00ff')       },
+      { label:'Team seats',                s:'1',        p:'1',         e:'Up to 10'          },
+      { label:'SLA guarantee',             s:cx,         p:cx,          e:ck('#ff00ff')       },
+    ];
+  }
+
+  renderVals() {
+    const s = this.state;
+    const annual = s.annual;
+
+    const toggleFaq = i => () => this.setState(st => {
+      const f = [...st.faq]; f[i] = !f[i]; return { faq: f };
+    });
+
+    const faqBtnStyle = i => ({
+      width:'100%', display:'flex', justifyContent:'space-between', alignItems:'center',
+      padding:'17px 20px', background:'transparent', border:'none',
+      color: s.faq[i] ? '#00ff88' : '#e0e0e0',
+      fontFamily:'"JetBrains Mono",monospace', fontSize:'0.8rem', textAlign:'left',
+      cursor:'pointer', transition:'color 150ms', gap:12,
+    });
+
+    // Toggle pill style
+    const toggleStyle = {
+      width:'42px', height:'22px', background: annual ? '#00ff88' : '#2a2a3a',
+      border:`1px solid ${annual ? '#00ff88' : '#2a2a3a'}`,
+      borderRadius:'11px', cursor:'pointer', position:'relative', transition:'all 200ms', padding:0,
+      boxShadow: annual ? '0 0 8px rgba(0,255,136,0.35)' : 'none',
+    };
+    const toggleKnob = {
+      position:'absolute', top:'2px', left: annual ? '20px' : '2px',
+      width:'16px', height:'16px', borderRadius:'50%',
+      background: annual ? '#0a0a0f' : '#6b7280', transition:'left 200ms',
+    };
+
+    // Prices
+    const proMonthly = 19, proAnnual = Math.round(19*0.8);
+    const entMonthly = 99, entAnnual = Math.round(99*0.8);
+
+    // Table rows as React elements
+    const rows = this.tableData().map((row, i) =>
+      React.createElement('tr', {
+        key: i,
+        style: { borderBottom:'1px solid #2a2a3a', background: i%2===0 ? 'transparent' : 'rgba(255,255,255,0.008)' }
+      },
+        React.createElement('td', { style:{ padding:'13px 20px', fontFamily:'"JetBrains Mono",monospace', fontSize:'0.73rem', color:'#6b7280' } }, row.label),
+        React.createElement('td', { style:{ padding:'13px 20px', textAlign:'center', fontFamily:'"JetBrains Mono",monospace', fontSize:'0.73rem', color:'#e0e0e0' }, dangerouslySetInnerHTML:{ __html: row.s } }),
+        React.createElement('td', { style:{ padding:'13px 20px', textAlign:'center', fontFamily:'"JetBrains Mono",monospace', fontSize:'0.73rem', color:'#e0e0e0', background:'rgba(0,255,136,0.025)' }, dangerouslySetInnerHTML:{ __html: row.p } }),
+        React.createElement('td', { style:{ padding:'13px 20px', textAlign:'center', fontFamily:'"JetBrains Mono",monospace', fontSize:'0.73rem', color:'#e0e0e0' }, dangerouslySetInnerHTML:{ __html: row.e } })
+      )
+    );
+    const tableRows = React.createElement(React.Fragment, null, ...rows);
+
+    return {
+      tableRows,
+      annual,
+      toggleBilling: () => this.setState(st => ({ annual: !st.annual })),
+      toggleStyle,
+      toggleKnob,
+      billMonthlyColor: annual ? '#3a3a4a' : '#e0e0e0',
+      billAnnualColor:  annual ? '#e0e0e0' : '#3a3a4a',
+      proPriceDisplay: `$${annual ? proAnnual : proMonthly}`,
+      entPriceDisplay: `$${annual ? entAnnual : entMonthly}`,
+      proBillingNote: annual ? 'Billed annually ($' + (proAnnual*12) + '/yr)' : 'Billed monthly',
+      entBillingNote: annual ? 'Billed annually ($' + (entAnnual*12) + '/yr)' : 'Billed monthly · team/API',
+      toggleFaq0: toggleFaq(0), toggleFaq1: toggleFaq(1), toggleFaq2: toggleFaq(2), toggleFaq3: toggleFaq(3),
+      faqOpen0: s.faq[0], faqOpen1: s.faq[1], faqOpen2: s.faq[2], faqOpen3: s.faq[3],
+      faqIcon0: s.faq[0]?'−':'+', faqIcon1: s.faq[1]?'−':'+', faqIcon2: s.faq[2]?'−':'+', faqIcon3: s.faq[3]?'−':'+',
+      faqBtn0: faqBtnStyle(0), faqBtn1: faqBtnStyle(1), faqBtn2: faqBtnStyle(2), faqBtn3: faqBtnStyle(3),
+    };
+  }
+}
+</script>
+</body>
+</html>
