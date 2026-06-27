@@ -51,6 +51,9 @@ export default function RootLayout({ children }: RootLayoutProps) {
       <body
         className={`${orbitron.variable} ${jetbrainsMono.variable} ${shareTechMono.variable} font-mono bg-background text-foreground antialiased`}
       >
+        <a href="#main-content" className="skip-link">
+          Skip to main content
+        </a>
         {children}
       </body>
     </html>
