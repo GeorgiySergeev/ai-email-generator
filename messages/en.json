@@ -1,0 +1,86 @@
+{
+  "common": {
+    "loading": "LOADING...",
+    "error": "ERR: SYSTEM_ERROR",
+    "retry": "RETRY →",
+    "save": "SAVE",
+    "cancel": "CANCEL"
+  },
+  "nav": {
+    "home": "Home",
+    "pricing": "//pricing",
+    "dashboard": "Dashboard",
+    "history": "History",
+    "profile": "Profile",
+    "login": "login",
+    "register": "get_access →",
+    "logout": "logout"
+  },
+  "hero": {
+    "eyebrow": "// SYS_INITIALIZED · AI EMAIL ENGINE v2.1.0",
+    "heading": "Write Better Emails in Seconds",
+    "subheading": "AI-powered email generation with precision tone control. No writer's block. No generic templates. Just high-signal messages that land every time.",
+    "status_online": "STATUS: ■ ONLINE",
+    "status_engine": "ENGINE: CLAUDE_HAIKU",
+    "status_uptime": "UPTIME: 99.9%",
+    "cta_primary": "GET_ACCESS →",
+    "cta_secondary": "LIVE_DEMO ↓"
+  },
+  "generator": {
+    "section_label": "// EMAIL_GENERATOR",
+    "title": "GENERATOR_PROTOCOL",
+    "description": "Describe your email and let AI write it for you.",
+    "subject_label": "01 // SUBJECT_LINE",
+    "subject_placeholder": "What is your email about?",
+    "tone_label": "02 // TONE_MATRIX",
+    "length_label": "03 // OUTPUT_LENGTH",
+    "submit": "GENERATE_EMAIL →",
+    "submitting": "GENERATING..."
+  },
+  "pricing": {
+    "section_label": "// 04_ACCESS_PASSES",
+    "title": "ACCESS_LEVELS",
+    "subtitle": "Start for free. Upgrade when you're ready. No hidden fees.",
+    "recommended_badge": "RECOMMENDED",
+    "monthly": "Monthly",
+    "annual": "Annual",
+    "save_badge": "SAVE 20%",
+    "starter": "STARTER",
+    "professional": "PROFESSIONAL",
+    "enterprise": "ENTERPRISE"
+  },
+  "auth": {
+    "section_label_login": "// ACCESS_PROTOCOL",
+    "section_label_register": "// NEW_USER_PROTOCOL",
+    "login_title": "SYSTEM_LOGIN",
+    "login_desc": "Enter your credentials to access the system",
+    "register_title": "SYSTEM_REGISTER",
+    "register_desc": "Create your account to start generating",
+    "email_label": "01 // EMAIL_ADDRESS",
+    "password_label": "02 // PASSWORD",
+    "confirm_password_label": "03 // CONFIRM_PASSWORD",
+    "sign_in": "INITIALIZE_ACCESS →",
+    "signing_in": "AUTHENTICATING...",
+    "create_account": "CREATE_ACCOUNT →",
+    "creating": "INITIALIZING...",
+    "no_account": "No account?",
+    "have_account": "Have account?",
+    "sign_up": "REGISTER →",
+    "sign_in_link": "LOGIN →"
+  },
+  "profile": {
+    "section_label": "// USER_PROFILE",
+    "title": "PROFILE_SETTINGS",
+    "identity_header": "identity.cfg",
+    "subscription_header": "subscription.status",
+    "danger_header": "danger.zone",
+    "display_name_label": "DISPLAY NAME",
+    "display_name_placeholder": "Enter display name",
+    "save_changes": "UPDATE_IDENTITY →",
+    "saving": "UPDATING...",
+    "success": "IDENTITY_UPDATED",
+    "plan_label": "PLAN",
+    "upgrade": "UPGRADE_PLAN →",
+    "delete_account": "DELETE_ACCOUNT"
+  }
+}

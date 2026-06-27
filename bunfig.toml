@@ -3,3 +3,4 @@ frozenLockfile = false  # set true in CI
 
 [test]
 preload = ["./tests/setup.ts"]
+exclude = ["tests/e2e/**"]

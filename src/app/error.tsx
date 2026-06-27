@@ -10,6 +10,7 @@ type ErrorProps = {
 
 const GlobalError = ({ error, reset }: ErrorProps) => {
   useEffect(() => {
+    // TODO: Sentry.captureException(error) — uncomment after `bun add @sentry/nextjs`
     console.error('[GlobalError]', error.digest, error.message)
   }, [error])
 

@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { createServerSupabaseClient } from '@/lib/supabase/server'
 import { logoutAction } from '@/actions/auth'
+import { LanguageSwitcher } from '@/components/shared/language-switcher'
 
 export const Header = async () => {
   const supabase = await createServerSupabaseClient()
@@ -20,6 +21,7 @@ export const Header = async () => {
           NEUR·O·MAIL
         </Link>
         <nav className="flex items-center gap-4 sm:gap-6" aria-label="Main navigation">
+          <LanguageSwitcher />
           <Link
             href="/#features"
             className="hidden sm:block font-label text-xs text-muted-foreground uppercase tracking-wider hover:text-foreground transition-colors"

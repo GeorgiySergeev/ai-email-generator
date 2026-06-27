@@ -1,5 +1,11 @@
 import '@testing-library/jest-dom'
+import { beforeEach } from 'bun:test'
 import { Window } from 'happy-dom'
+
+// Clear rendered components between tests without destroying the happy-dom document reference
+beforeEach(() => {
+  document.body.innerHTML = ''
+})
 
 const window = new Window()
 

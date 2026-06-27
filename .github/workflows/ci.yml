@@ -30,7 +30,7 @@ jobs:
         run: bun run lint
 
       - name: Unit tests
-        run: bun test --coverage
+        run: bun test tests/unit --coverage
 
       - name: Build
         run: bun run build

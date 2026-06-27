@@ -38,6 +38,7 @@ export const generateEmailAction = async (
   try {
     aiResult = await aiProvider.generateEmail(parsed.data)
   } catch (error) {
+    // TODO: Sentry.captureException(error, { extra: { userId: user.id, subject: parsed.data.subject } }) — uncomment after bun add @sentry/nextjs
     console.error('[generateEmailAction] AI error:', error)
     return {
       success: false,

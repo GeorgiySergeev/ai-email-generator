@@ -1,6 +1,22 @@
 import { createServerClient, type CookieOptions } from '@supabase/ssr'
 import { type NextRequest, NextResponse } from 'next/server'
 
+const SUPPORTED_LOCALES = ['en', 'ru']
+const DEFAULT_LOCALE = 'en'
+
+function detectLocale(request: NextRequest): string {
+  const cookie = request.cookies.get('NEXT_LOCALE')?.value
+  if (cookie && SUPPORTED_LOCALES.includes(cookie)) return cookie
+
+  const acceptLanguage = request.headers.get('accept-language') ?? ''
+  const preferred = acceptLanguage
+    .split(',')
+    .map((s) => (s.split(';')[0] ?? '').trim().slice(0, 2).toLowerCase())
+    .find((lang) => SUPPORTED_LOCALES.includes(lang))
+
+  return preferred ?? DEFAULT_LOCALE
+}
+
 export const middleware = async (request: NextRequest) => {
   let supabaseResponse = NextResponse.next({ request })
 
@@ -40,6 +56,16 @@ export const middleware = async (request: NextRequest) => {
   const isAuth = pathname.startsWith('/login') || pathname.startsWith('/register')
   if (isAuth && user) {
     return NextResponse.redirect(new URL('/dashboard', request.url))
+  }
+
+  // Set locale cookie if not already set (for next-intl)
+  if (!request.cookies.get('NEXT_LOCALE')) {
+    const locale = detectLocale(request)
+    supabaseResponse.cookies.set('NEXT_LOCALE', locale, {
+      path: '/',
+      maxAge: 60 * 60 * 24 * 365,
+      sameSite: 'lax',
+    })
   }
 
   return supabaseResponse
