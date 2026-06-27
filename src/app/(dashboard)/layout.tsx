@@ -27,6 +27,16 @@ export default async function DashboardLayout({ children }: DashboardLayoutProps
     .eq('id', user.id)
     .single()) as { data: ProfileRow | null; error: unknown }
 
+  const { count: emailCount } = await supabase
+    .from('generated_emails')
+    .select('*', { count: 'exact', head: true })
+    .eq('user_id', user.id)
+
+  const currentCount = emailCount ?? 0
+  const maxLimit = 10
+  const isFreePlan = (profile?.plan ?? 'free') === 'free'
+  const progressPercent = Math.min((currentCount / maxLimit) * 100, 100)
+
   const initials = profile?.full_name
     ? profile.full_name
         .split(' ')
@@ -62,11 +72,15 @@ export default async function DashboardLayout({ children }: DashboardLayoutProps
           </div>
           <div className="bg-background h-1 rounded overflow-hidden">
             <div
-              className="h-full bg-primary shadow-[0_0_6px_rgba(0,255,136,0.5)]"
-              style={{ width: '30%' }}
+              className={`h-full bg-primary shadow-[0_0_6px_rgba(0,255,136,0.5)] ${currentCount >= maxLimit && isFreePlan ? 'bg-destructive shadow-[0_0_6px_rgba(255,50,50,0.5)]' : ''}`}
+              style={{ width: isFreePlan ? `${progressPercent}%` : '100%' }}
             />
           </div>
-          <div className="font-mono text-xs text-muted-foreground">3 / 10 emails</div>
+          <div className="font-mono text-xs text-muted-foreground">
+            {isFreePlan
+              ? `${currentCount} / ${maxLimit} emails`
+              : `${currentCount} emails generated`}
+          </div>
           <Button asChild variant="outline" size="sm" className="w-full chamfered">
             <Link href="/pricing">Upgrade →</Link>
           </Button>

@@ -8,8 +8,14 @@ export type PricingFeature = {
 export type PricingTier = {
   plan: UserPlan
   name: string
-  price: number
-  period: 'month' | 'year' | 'free'
+  price: {
+    monthly: number
+    yearly: number
+  }
+  stripePriceId?: {
+    monthly: string
+    yearly: string
+  }
   description: string
   features: PricingFeature[]
   cta: string
@@ -20,13 +26,15 @@ export const PRICING_TIERS: PricingTier[] = [
   {
     plan: 'free',
     name: 'STARTER',
-    price: 0,
-    period: 'free',
+    price: {
+      monthly: 0,
+      yearly: 0,
+    },
     description: 'Free forever · no card',
     recommended: false,
     cta: 'START FREE',
     features: [
-      { text: '10 emails per month', included: true },
+      { text: '10 emails per day', included: true },
       { text: '3 tone modes', included: true },
       { text: '7-day history', included: true },
       { text: 'Email support', included: true },
@@ -38,11 +46,17 @@ export const PRICING_TIERS: PricingTier[] = [
   {
     plan: 'pro',
     name: 'PROFESSIONAL',
-    price: 19,
-    period: 'month',
-    description: 'Billed monthly',
+    price: {
+      monthly: 19.99,
+      yearly: 119.94, // $9.99/mo
+    },
+    stripePriceId: {
+      monthly: process.env.NEXT_PUBLIC_STRIPE_PRICE_PRO_MONTHLY || '',
+      yearly: process.env.NEXT_PUBLIC_STRIPE_PRICE_PRO_YEARLY || '',
+    },
+    description: 'Billed per period',
     recommended: true,
-    cta: 'GET STARTED',
+    cta: 'UPGRADE NOW',
     features: [
       { text: 'Unlimited emails', included: true },
       { text: 'All 5 tone modes', included: true },
@@ -56,11 +70,17 @@ export const PRICING_TIERS: PricingTier[] = [
   {
     plan: 'enterprise',
     name: 'ENTERPRISE',
-    price: 99,
-    period: 'month',
-    description: 'Billed monthly',
+    price: {
+      monthly: 29.99,
+      yearly: 179.94, // $14.99/mo
+    },
+    stripePriceId: {
+      monthly: process.env.NEXT_PUBLIC_STRIPE_PRICE_ENT_MONTHLY || '',
+      yearly: process.env.NEXT_PUBLIC_STRIPE_PRICE_ENT_YEARLY || '',
+    },
+    description: 'Billed per period',
     recommended: false,
-    cta: 'CONTACT SALES',
+    cta: 'UPGRADE NOW',
     features: [
       { text: 'Everything in Pro', included: true },
       { text: 'REST API access', included: true },

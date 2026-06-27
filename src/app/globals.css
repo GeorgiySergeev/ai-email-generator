@@ -133,6 +133,11 @@
   animation: fade-up 0.6s var(--ease-default) both;
 }
 
+
+html {
+  scroll-behavior: smooth;
+}
+
 /* Skip to main content link (a11y) */
 .skip-link {
   position: absolute;
@@ -149,3 +154,5 @@
 .skip-link:focus {
   top: 0;
 }
+
+

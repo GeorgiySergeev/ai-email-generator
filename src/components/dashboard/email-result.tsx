@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { Copy, Check, Trash2 } from 'lucide-react'
+import { Copy, Check, Trash2, RotateCcw } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import type { GeneratedEmail } from '@/types'
@@ -11,9 +11,10 @@ import { formatDate } from '@/lib/utils'
 type EmailResultProps = {
   email: GeneratedEmail
   onDelete?: (id: string) => void
+  onReset?: () => void
 }
 
-export const EmailResult = ({ email, onDelete }: EmailResultProps) => {
+export const EmailResult = ({ email, onDelete, onReset }: EmailResultProps) => {
   const [copied, setCopied] = useState(false)
 
   const handleCopy = async () => {
@@ -80,6 +81,17 @@ export const EmailResult = ({ email, onDelete }: EmailResultProps) => {
             {copied ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
             {copied ? 'COPIED!' : 'COPY_TO_CLIPBOARD'}
           </Button>
+          {onReset && (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={onReset}
+              className="chamfered gap-2 hover:bg-destructive/10 hover:text-destructive hover:border-destructive/50"
+            >
+              <RotateCcw className="h-3.5 w-3.5" />
+              RESET
+            </Button>
+          )}
           {onDelete && (
             <Button
               variant="ghost"

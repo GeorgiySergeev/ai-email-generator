@@ -8,7 +8,7 @@ type GeneratorState = {
 }
 
 type GeneratorActions = {
-  setResult: (email: GeneratedEmail) => void
+  setResult: (email: GeneratedEmail | null) => void
   setGenerating: (value: boolean) => void
   setError: (error: string | null) => void
   reset: () => void

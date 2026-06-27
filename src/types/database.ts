@@ -15,6 +15,10 @@ export type Database = {
           plan: 'free' | 'pro' | 'enterprise'
           created_at: string
           updated_at: string
+          stripe_customer_id: string | null
+          stripe_subscription_id: string | null
+          stripe_price_id: string | null
+          stripe_current_period_end: string | null
         }
         Insert: {
           id: string
@@ -24,6 +28,10 @@ export type Database = {
           plan?: 'free' | 'pro' | 'enterprise'
           created_at?: string
           updated_at?: string
+          stripe_customer_id?: string | null
+          stripe_subscription_id?: string | null
+          stripe_price_id?: string | null
+          stripe_current_period_end?: string | null
         }
         Update: {
           id?: string
@@ -33,6 +41,10 @@ export type Database = {
           plan?: 'free' | 'pro' | 'enterprise'
           created_at?: string
           updated_at?: string
+          stripe_customer_id?: string | null
+          stripe_subscription_id?: string | null
+          stripe_price_id?: string | null
+          stripe_current_period_end?: string | null
         }
         Relationships: []
       }

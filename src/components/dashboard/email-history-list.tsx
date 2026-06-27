@@ -1,6 +1,6 @@
 'use client'
 
-import { useTransition } from 'react'
+import { useTransition, useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { EmailResult } from './email-result'
 import { deleteEmailAction } from '@/actions/email'
@@ -14,15 +14,25 @@ type EmailHistoryListProps = {
 export const EmailHistoryList = ({ emails }: EmailHistoryListProps) => {
   const router = useRouter()
   const [, startTransition] = useTransition()
+  const [localEmails, setLocalEmails] = useState(emails)
+
+  useEffect(() => {
+    setLocalEmails(emails)
+  }, [emails])
 
   const handleDelete = (id: string) => {
+    setLocalEmails((prev) => prev.filter((e) => e.id !== id))
     startTransition(async () => {
       const result = await deleteEmailAction(id)
-      if (result.success) router.refresh()
+      if (result.success) {
+        router.refresh()
+      } else {
+        setLocalEmails(emails)
+      }
     })
   }
 
-  if (emails.length === 0) {
+  if (localEmails.length === 0) {
     return (
       <div className="rounded-xl border border-dashed border-border p-12 text-center">
         <p className="text-muted-foreground font-mono text-sm">
@@ -39,7 +49,7 @@ export const EmailHistoryList = ({ emails }: EmailHistoryListProps) => {
   return (
     <AnimatePresence>
       <div className="space-y-4">
-        {emails.map((email, i) => (
+        {localEmails.map((email, i) => (
           <motion.div
             key={email.id}
             initial={{ opacity: 0, y: 12 }}
