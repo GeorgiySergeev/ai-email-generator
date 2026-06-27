@@ -7,6 +7,7 @@ import { ProfileForm } from '@/components/dashboard/profile-form'
 import type { Profile } from '@/types'
 import type { Database } from '@/types/database'
 import Link from 'next/link'
+import { createCustomerPortalSession } from '@/actions/stripe'
 
 type ProfileRow = Database['public']['Tables']['profiles']['Row']
 
@@ -36,6 +37,16 @@ export default async function ProfilePage() {
     createdAt: row.created_at,
     updatedAt: row.updated_at,
   }
+
+  // Calculate limits (last 24 hours)
+  const yesterday = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString()
+  const { count } = await supabase
+    .from('generated_emails')
+    .select('*', { count: 'exact', head: true })
+    .eq('user_id', user.id)
+    .gte('created_at', yesterday)
+
+  const emailsCount = count || 0
 
   const initials = profile.fullName
     ? profile.fullName
@@ -125,17 +136,34 @@ export default async function ProfilePage() {
                 </Badge>
               </div>
 
-              <div className="bg-background h-1 rounded overflow-hidden">
-                <div
-                  className="h-full bg-primary shadow-[0_0_6px_rgba(0,255,136,0.5)]"
-                  style={{ width: '30%' }}
-                />
-              </div>
-              <div className="font-mono text-xs text-muted-foreground">3 / 10 emails</div>
+              {profile.plan === 'free' ? (
+                <>
+                  <div className="bg-background h-1 rounded overflow-hidden">
+                    <div
+                      className="h-full bg-primary shadow-[0_0_6px_rgba(0,255,136,0.5)] transition-all"
+                      style={{ width: `${(emailsCount / 10) * 100}%` }}
+                    />
+                  </div>
+                  <div className="font-mono text-xs text-muted-foreground">
+                    {emailsCount} / 10 emails today
+                  </div>
 
-              <Button asChild variant="outline" size="sm" className="w-full chamfered">
-                <Link href="/pricing">UPGRADE_PLAN →</Link>
-              </Button>
+                  <Button asChild variant="outline" size="sm" className="w-full chamfered">
+                    <Link href="/pricing">UPGRADE_PLAN →</Link>
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <div className="font-mono text-xs text-muted-foreground">
+                    Unlimited emails available
+                  </div>
+                  <form action={createCustomerPortalSession}>
+                    <Button type="submit" variant="outline" size="sm" className="w-full chamfered">
+                      MANAGE_SUBSCRIPTION →
+                    </Button>
+                  </form>
+                </>
+              )}
             </div>
           </div>
 

@@ -2,8 +2,8 @@ node_modules
 .next
 .git
 .env*.local
-bun.lockb
 tests/e2e
 docs
 .claude
 .gitnexus
+*.sql

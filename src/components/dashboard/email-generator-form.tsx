@@ -187,7 +187,7 @@ export const EmailGeneratorForm = () => {
             exit={{ opacity: 0, y: -8 }}
             transition={{ duration: 0.3, ease: 'easeOut' }}
           >
-            <EmailResult email={lastResult} />
+            <EmailResult email={lastResult} onReset={() => setResult(null)} />
           </motion.div>
         )}
       </AnimatePresence>

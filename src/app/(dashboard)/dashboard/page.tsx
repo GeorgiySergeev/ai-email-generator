@@ -1,11 +1,16 @@
 import type { Metadata } from 'next'
 import { EmailGeneratorForm } from '@/components/dashboard/email-generator-form'
+import { CheckoutSuccessHandler } from '@/components/dashboard/checkout-success-handler'
+import { Suspense } from 'react'
 
 export const metadata: Metadata = { title: 'Generator | NEUROMAIL' }
 
 export default function DashboardPage() {
   return (
     <div className="container mx-auto px-4 py-8 sm:px-6 max-w-3xl">
+      <Suspense fallback={null}>
+        <CheckoutSuccessHandler />
+      </Suspense>
       <div className="font-label text-xs text-primary uppercase tracking-[0.24em] mb-3">
         {'// EMAIL_GENERATOR'}
       </div>

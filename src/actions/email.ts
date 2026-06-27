@@ -33,6 +33,31 @@ export const generateEmailAction = async (
     }
   }
 
+  // Check usage limits
+  const { data: profile } = (await supabase
+    .from('profiles')
+    .select('plan')
+    .eq('id', user.id)
+    .single()) as { data: { plan: string } | null; error: unknown }
+
+  if (profile?.plan === 'free') {
+    const yesterday = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString()
+    const { count } = await supabase
+      .from('generated_emails')
+      .select('*', { count: 'exact', head: true })
+      .eq('user_id', user.id)
+      .gte('created_at', yesterday)
+
+    if (count !== null && count >= 10) {
+      return {
+        success: false,
+        error:
+          'Дневной лимит (10 писем) исчерпан. Счетчик обновится через сутки, либо перейдите на платный тариф.',
+        code: 'RATE_LIMITED',
+      }
+    }
+  }
+
   const aiProvider = getAIProvider()
   let aiResult
   try {
