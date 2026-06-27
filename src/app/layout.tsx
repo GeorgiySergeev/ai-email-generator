@@ -37,7 +37,7 @@ export const metadata: Metadata = {
   },
   description:
     "AI-powered email generation with precision tone control. No writer's block. No generic templates.",
-  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000'),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'),
   openGraph: {
     title: 'NEUROMAIL',
     description: 'AI-powered email generation with precision tone control',
