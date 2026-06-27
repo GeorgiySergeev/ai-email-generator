@@ -5,10 +5,13 @@ import { createClient } from '@supabase/supabase-js'
 import type { Database } from '@/types/database'
 import Stripe from 'stripe'
 
-// We need a server-side Supabase client with the service role key to bypass RLS
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!
-const supabase = createClient<Database>(supabaseUrl, supabaseServiceKey)
+// Lazy init — avoid module-level throw when env vars are absent during build
+function getSupabase() {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY
+  if (!url || !key) throw new Error('Supabase env vars are not configured')
+  return createClient<Database>(url, key)
+}
 
 export async function POST(req: Request) {
   const body = await req.text()
@@ -48,7 +51,7 @@ export async function POST(req: Request) {
       case 'customer.subscription.updated': {
         const subscription = event.data.object as Stripe.Subscription
         // Retrieve the user from the customer id
-        const { data: profileList } = await supabase
+        const { data: profileList } = await getSupabase()
           .from('profiles')
           .select('id')
           .eq('stripe_customer_id', subscription.customer as string)
@@ -60,13 +63,13 @@ export async function POST(req: Request) {
       }
       case 'customer.subscription.deleted': {
         const subscription = event.data.object as Stripe.Subscription
-        const { data: deletedProfileList } = await supabase
+        const { data: deletedProfileList } = await getSupabase()
           .from('profiles')
           .select('id')
           .eq('stripe_customer_id', subscription.customer as string)
 
         if (deletedProfileList && deletedProfileList.length > 0 && deletedProfileList[0]) {
-          await supabase
+          await getSupabase()
             .from('profiles')
             .update({
               plan: 'free',
@@ -125,7 +128,7 @@ async function updateProfileSubscription(userId: string, subscription: Stripe.Su
     console.error('Failed to parse date in webhook:', e)
   }
 
-  await supabase
+  await getSupabase()
     .from('profiles')
     .update({
       plan,
