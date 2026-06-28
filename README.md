@@ -1,29 +1,81 @@
-# AI Email Generator
-
-> **Status: Planning / Pre-implementation.** This repository contains architecture
-> documentation and a phased implementation plan. No application code exists yet.
-> See [IMPLEMENTATION_PLAN.md](./IMPLEMENTATION_PLAN.md) to build from scratch.
+# NEUR·O·MAIL — AI Email Generator
 
 > Generate professional, casual, formal, or persuasive emails in seconds using AI.  
-> MVP built in 48 hours as part of a Vibe Coder / AI-First Developer test assignment.
+> Built with Next.js 15, Supabase, Claude AI, and Stripe.
 
-[![CI](https://github.com/your-username/ai-email-generator/actions/workflows/ci.yml/badge.svg)](https://github.com/your-username/ai-email-generator/actions)
-[![Deploy](https://img.shields.io/badge/deploy-vercel-black)](https://your-project.vercel.app)
+[![CI](https://github.com/GeorgiySergeev/ai-email-generator/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/GeorgiySergeev/ai-email-generator/actions)
+[![Deploy](https://img.shields.io/badge/deploy-vercel-black)](https://ai-email-generator-rouge.vercel.app)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue)](https://www.typescriptlang.org/)
 [![Next.js](https://img.shields.io/badge/Next.js-15-black)](https://nextjs.org/)
 
-## Created demo@example.com (free)
+**Live demo:** https://ai-email-generator-rouge.vercel.app  
+**GitHub:** https://github.com/GeorgiySergeev/ai-email-generator
 
-## Created pro@example.com (pro)
+---
 
-## Created email: Quarterly report
+## Try the Demo
 
-## Created email: Meeting invitation
+### 1. Register or use a test account
 
-<!-- TODO: Replace with real URLs after first deploy -->
+Go to https://ai-email-generator-rouge.vercel.app/register
 
-**Live URL:** [https://your-project.vercel.app](https://your-project.vercel.app)  
-**GitHub:** [https://github.com/your-username/ai-email-generator](https://github.com/your-username/ai-email-generator)
+**Email confirmation is disabled** — after registration you are redirected to the dashboard immediately, no email needed.
+
+Use one of the ready-made test accounts:
+
+| Email              | Password      | Plan |
+| ------------------ | ------------- | ---- |
+| `demo@example.com` | `password123` | Free |
+| `pro@example.com`  | `password123` | Pro  |
+
+Or register with any email/password of your own.
+
+---
+
+### 2. Generate an email
+
+1. Open the **Dashboard**
+2. Fill in **Context** — describe what the email should say
+3. Pick a **Tone**: Professional / Casual / Formal / Friendly / Persuasive
+4. Pick a **Length**: Short / Medium / Long
+5. Click **GENERATE** — Claude AI writes the email in seconds
+6. Copy the result or find it later in **History**
+
+Free plan limit: **10 emails** total.
+
+---
+
+### 3. Test Stripe payments (upgrade to Pro / Enterprise)
+
+Go to https://ai-email-generator-rouge.vercel.app/pricing
+
+Stripe runs in **test mode** — no real money is charged.
+
+**Test card numbers:**
+
+| Scenario              | Card number           | Expiry          | CVC          |
+| --------------------- | --------------------- | --------------- | ------------ |
+| ✅ Payment succeeds   | `4242 4242 4242 4242` | Any future date | Any 3 digits |
+| 🔐 Requires 3D Secure | `4000 0025 0000 3155` | Any future date | Any 3 digits |
+| ❌ Card declined      | `4000 0000 0000 0002` | Any future date | Any 3 digits |
+
+- **Cardholder name / address:** any value
+- **ZIP:** any 5 digits (e.g. `12345`)
+
+After a successful payment the plan upgrades instantly and generation limits are lifted.
+
+---
+
+## Plans
+
+|            | Starter  | Professional | Enterprise  |
+| ---------- | -------- | ------------ | ----------- |
+| Price      | Free     | $19.99 / mo  | $29.99 / mo |
+| Emails     | 10 total | Unlimited    | Unlimited   |
+| Tones      | 3        | All 5        | All 5       |
+| History    | 7 days   | Unlimited    | Unlimited   |
+| API access | —        | —            | ✓           |
+| Team seats | —        | —            | Up to 10    |
 
 ---
 
@@ -320,12 +372,16 @@ bun run db:seed
 ### Development
 
 ```bash
-# Start with docker-compose
-docker compose -f docker/docker-compose.yml up
+# Start with docker-compose (from project root)
+docker compose -f docker/docker-compose.yml up --build
+```
 
+App will be available at http://localhost:3001 (port 3000 is reserved for `bun dev`).
+
+```bash
 # Or build and run manually
 docker build -f docker/Dockerfile -t ai-email-gen .
-docker run -p 3000:3000 --env-file .env.local ai-email-gen
+docker run -p 3001:3000 --env-file .env.local ai-email-gen
 ```
 
 ### Production build

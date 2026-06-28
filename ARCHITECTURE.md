@@ -14,29 +14,29 @@ MVP AI Email Generator is a SaaS application with a Landing Page, authentication
 
 ## 2. Adopted Technology Stack
 
-| Layer | Technology | Version |
-|---|---|---|
-| **Framework** | Next.js (App Router) | 15.x |
-| **Language** | TypeScript | 5.x |
-| **Styling** | Tailwind CSS | 4.x |
-| **UI Components** | shadcn/ui + Radix UI | latest |
-| **Animations** | Framer Motion | 11.x |
-| **Fonts** | Orbitron + JetBrains Mono + Share Tech Mono | via next/font |
-| **Design System** | Cyberpunk (dark-only, neon palette) | see DESIGN_SYSTEM.md |
-| **Auth + DB** | Supabase | 2.x |
-| **Validation** | Zod | 3.x |
-| **Forms** | React Hook Form | 7.x |
-| **Server State** | Server Actions + revalidatePath | — |
-| **Client State** | Zustand | 5.x |
-| **AI Provider** | Anthropic Claude API + Mock adapter | — |
-| **i18n** | next-intl | 3.x |
-| **Package Manager** | Bun | 1.x |
-| **Testing** | bun test + Testing Library + Playwright | — |
-| **Linting** | ESLint (flat config) + Prettier | — |
-| **CI/CD** | GitHub Actions | — |
-| **Deploy** | Vercel | — |
-| **Containers** | Docker (`oven/bun` image) | — |
-| **Lib Docs** | Context7 MCP | — |
+| Layer               | Technology                                  | Version              |
+| ------------------- | ------------------------------------------- | -------------------- |
+| **Framework**       | Next.js (App Router)                        | 15.x                 |
+| **Language**        | TypeScript                                  | 5.x                  |
+| **Styling**         | Tailwind CSS                                | 4.x                  |
+| **UI Components**   | shadcn/ui + Radix UI                        | latest               |
+| **Animations**      | Framer Motion                               | 11.x                 |
+| **Fonts**           | Orbitron + JetBrains Mono + Share Tech Mono | via next/font        |
+| **Design System**   | Cyberpunk (dark-only, neon palette)         | see DESIGN_SYSTEM.md |
+| **Auth + DB**       | Supabase                                    | 2.x                  |
+| **Validation**      | Zod                                         | 3.x                  |
+| **Forms**           | React Hook Form                             | 7.x                  |
+| **Server State**    | Server Actions + revalidatePath             | —                    |
+| **Client State**    | Zustand                                     | 5.x                  |
+| **AI Provider**     | Anthropic Claude API + Mock adapter         | —                    |
+| **i18n**            | next-intl                                   | 3.x                  |
+| **Package Manager** | Bun                                         | 1.x                  |
+| **Testing**         | bun test + Testing Library + Playwright     | —                    |
+| **Linting**         | ESLint (flat config) + Prettier             | —                    |
+| **CI/CD**           | GitHub Actions                              | —                    |
+| **Deploy**          | Vercel                                      | —                    |
+| **Containers**      | Docker (`oven/bun` image)                   | —                    |
+| **Lib Docs**        | Context7 MCP                                | —                    |
 
 ---
 
@@ -45,6 +45,7 @@ MVP AI Email Generator is a SaaS application with a Landing Page, authentication
 ### 3.1 Next.js 15 (App Router)
 
 **Chosen because:**
+
 - App Router defaults to Server Components → less client JS, better Landing Page SEO.
 - Built-in Route Handlers replace a separate Express/Fastify server → less infrastructure.
 - Layouts + Route Groups cleanly isolate `(auth)`, `(dashboard)`, `(marketing)`.
@@ -57,6 +58,7 @@ MVP AI Email Generator is a SaaS application with a Landing Page, authentication
 ### 3.2 TypeScript 5.x
 
 **Chosen because:**
+
 - Catches errors at compile time, especially with Supabase (typed schema) and Zod.
 - `strict: true` + `noUncheckedIndexedAccess` eliminates an entire class of runtime errors.
 - All AI responses typed through Zod → no `any` at system boundaries.
@@ -64,6 +66,7 @@ MVP AI Email Generator is a SaaS application with a Landing Page, authentication
 ### 3.3 Tailwind CSS 4.x
 
 **Chosen because:**
+
 - Utility-first → fast layout without inventing class names.
 - Tailwind 4 introduces CSS-first config (no `tailwind.config.ts` file needed), native CSS cascade layers, better tree-shaking.
 - Design system defined via CSS variables in `@theme` block → single source of truth.
@@ -72,6 +75,7 @@ MVP AI Email Generator is a SaaS application with a Landing Page, authentication
 ### 3.4 shadcn/ui + Radix UI
 
 **Chosen because:**
+
 - shadcn/ui is not a library — it's **copied components**. No vendor lock-in; code lives in the project.
 - All components built on Radix UI → WCAG 2.1 AA accessibility out of the box.
 - Fully compatible with Tailwind, easily customised.
@@ -80,6 +84,7 @@ MVP AI Email Generator is a SaaS application with a Landing Page, authentication
 ### 3.5 Framer Motion
 
 **Chosen because:**
+
 - Declarative API that works with Server and Client Components.
 - Needed: animated hero section, scroll-reveal for Landing sections, route transitions.
 - `AnimatePresence` for smooth mount/unmount of components.
@@ -87,6 +92,7 @@ MVP AI Email Generator is a SaaS application with a Landing Page, authentication
 ### 3.6 Supabase (Auth + PostgreSQL)
 
 **Chosen because:**
+
 - Single platform: Auth, Database, Storage, Realtime — reduces infrastructure complexity.
 - Free tier sufficient for MVP: 500 MB DB, 50,000 MAU.
 - Built-in Row Level Security (RLS) — data isolation enforced at the DB layer with no extra middleware.
@@ -97,6 +103,7 @@ MVP AI Email Generator is a SaaS application with a Landing Page, authentication
 ### 3.7 Zod
 
 **Chosen because:**
+
 - Runtime validation of all input data (API routes, forms, AI responses).
 - Automatically infers TypeScript types → `z.infer<typeof schema>`.
 - Integrates with React Hook Form via `@hookform/resolvers/zod`.
@@ -105,6 +112,7 @@ MVP AI Email Generator is a SaaS application with a Landing Page, authentication
 ### 3.8 React Hook Form
 
 **Chosen because:**
+
 - Uncontrolled form → no re-render on every keystroke.
 - Native Zod integration via resolver.
 - Supports `useFormState` for Server Actions.
@@ -112,6 +120,7 @@ MVP AI Email Generator is a SaaS application with a Landing Page, authentication
 ### 3.9 Server Actions (Server State)
 
 **Chosen because:**
+
 - Mutations are type-safe end-to-end without a separate API layer (no REST endpoints).
 - CSRF protection built into Next.js Server Actions.
 - `revalidatePath()` and `redirect()` work natively after mutations — no cache invalidation code needed.
@@ -122,6 +131,7 @@ MVP AI Email Generator is a SaaS application with a Landing Page, authentication
 ### 3.10 Zustand
 
 **Chosen because:**
+
 - Functional approach (no classes, no reducers).
 - Minimal boilerplate compared to Redux.
 - Only needed for UI state: current tone/length in the generator form, open modals.
@@ -130,6 +140,7 @@ MVP AI Email Generator is a SaaS application with a Landing Page, authentication
 ### 3.11 AI — Anthropic Claude + Mock Adapter
 
 **Chosen because:**
+
 - **Strategy/Adapter pattern**: `AIProvider` interface with a single `generateEmail(params)` method.
 - `ClaudeProvider` implements the real API.
 - `MockProvider` implements a deterministic response for dev/test.
@@ -139,6 +150,7 @@ MVP AI Email Generator is a SaaS application with a Landing Page, authentication
 ### 3.12 next-intl (i18n)
 
 **Chosen because:**
+
 - Bonus point from the spec.
 - Supports App Router Server Components.
 - Lazy-loading translations via `messages` files.
@@ -147,6 +159,7 @@ MVP AI Email Generator is a SaaS application with a Landing Page, authentication
 ### 3.13 bun test + Testing Library + Playwright
 
 **Chosen because:**
+
 - **bun test** is built into Bun — zero config, native TypeScript, fastest test runner available (runs test files in parallel workers natively).
 - `import { describe, it, expect, mock } from 'bun:test'` — no external test runner dep.
 - Built-in `--dom` flag activates happy-dom for React component tests without extra setup.
@@ -157,6 +170,7 @@ MVP AI Email Generator is a SaaS application with a Landing Page, authentication
 ### 3.14 Context7 MCP
 
 **Chosen because:**
+
 - LLM training data becomes stale — library APIs change, methods deprecate.
 - Context7 provides pinned, current documentation for exact package versions in use.
 - Mandatory before using any library API or installing any package (see RULES.md §7).
@@ -164,6 +178,7 @@ MVP AI Email Generator is a SaaS application with a Landing Page, authentication
 ### 3.15 Docker
 
 **Chosen because:**
+
 - Bonus point from the spec.
 - `docker-compose.yml` for local development.
 - Production Dockerfile with multi-stage build (builder → runner).
@@ -171,6 +186,7 @@ MVP AI Email Generator is a SaaS application with a Landing Page, authentication
 ### 3.16 Cyberpunk Design System
 
 **Chosen because:**
+
 - Unique visual identity differentiates from generic SaaS products.
 - Dark-only design simplifies theming (no light/dark toggle complexity).
 - Monospace-first typography reinforces "developer tool" positioning.
@@ -179,6 +195,7 @@ MVP AI Email Generator is a SaaS application with a Landing Page, authentication
 - Terminal-style UI components reinforce "command-line" metaphor for power users.
 
 **Key decisions:**
+
 - **Orbitron** for headings (futuristic, technical, high-impact)
 - **JetBrains Mono** for body (readable monospace, developer-friendly)
 - **Share Tech Mono** for labels (HUD aesthetic, technical feel)
@@ -196,80 +213,80 @@ MVP AI Email Generator is a SaaS application with a Landing Page, authentication
 
 ### 4.1 Framework
 
-| Alternative | Reason Rejected |
-|---|---|
-| **Vite + React SPA** | No SSR → poor SEO for Landing Page; requires separate backend |
-| **Remix** | Good option, but less mature than Next.js App Router equivalent; fewer Supabase SSR resources |
-| **SvelteKit** | Smaller component ecosystem; LLM agents have less Svelte training context |
-| **Astro** | Excellent for Landing Page; poor fit for the SPA dashboard section |
-| **T3 Stack (Next + tRPC + Prisma)** | tRPC adds a layer of complexity; Prisma + separate PostgreSQL = more infrastructure for MVP |
+| Alternative                         | Reason Rejected                                                                               |
+| ----------------------------------- | --------------------------------------------------------------------------------------------- |
+| **Vite + React SPA**                | No SSR → poor SEO for Landing Page; requires separate backend                                 |
+| **Remix**                           | Good option, but less mature than Next.js App Router equivalent; fewer Supabase SSR resources |
+| **SvelteKit**                       | Smaller component ecosystem; LLM agents have less Svelte training context                     |
+| **Astro**                           | Excellent for Landing Page; poor fit for the SPA dashboard section                            |
+| **T3 Stack (Next + tRPC + Prisma)** | tRPC adds a layer of complexity; Prisma + separate PostgreSQL = more infrastructure for MVP   |
 
 ### 4.2 UI Library
 
-| Alternative | Reason Rejected |
-|---|---|
-| **MUI (Material UI)** | Heavy (> 300 KB), enforces Material Design, painful customisation |
-| **Ant Design** | Enterprise aesthetic, heavy, weak Tailwind integration |
-| **Chakra UI v3** | Rewritten, smaller community, weaker shadcn ecosystem integration |
-| **Mantine** | Good, but overlaps with shadcn; extra vendor |
-| **Headless UI (Tailwind Labs)** | Fewer components, not actively developed |
+| Alternative                     | Reason Rejected                                                   |
+| ------------------------------- | ----------------------------------------------------------------- |
+| **MUI (Material UI)**           | Heavy (> 300 KB), enforces Material Design, painful customisation |
+| **Ant Design**                  | Enterprise aesthetic, heavy, weak Tailwind integration            |
+| **Chakra UI v3**                | Rewritten, smaller community, weaker shadcn ecosystem integration |
+| **Mantine**                     | Good, but overlaps with shadcn; extra vendor                      |
+| **Headless UI (Tailwind Labs)** | Fewer components, not actively developed                          |
 
 ### 4.3 Authentication
 
-| Alternative | Reason Rejected |
-|---|---|
-| **Auth0** | Paid above 7,500 MAU; external vendor; complex own-DB integration |
-| **Firebase Auth** | Google lock-in; Firestore is non-relational; separate DB from main data |
+| Alternative                  | Reason Rejected                                                                      |
+| ---------------------------- | ------------------------------------------------------------------------------------ |
+| **Auth0**                    | Paid above 7,500 MAU; external vendor; complex own-DB integration                    |
+| **Firebase Auth**            | Google lock-in; Firestore is non-relational; separate DB from main data              |
 | **NextAuth.js (Auth.js v5)** | Requires more custom code for Supabase DB; Supabase Auth already integrates with RLS |
-| **Clerk** | Paid at scale; external UI component that resists customisation |
+| **Clerk**                    | Paid at scale; external UI component that resists customisation                      |
 
 ### 4.4 Database / ORM
 
-| Alternative | Reason Rejected |
-|---|---|
-| **Prisma + PlanetScale** | PlanetScale MySQL-only (no foreign keys); separate infrastructure |
-| **Drizzle + Neon** | Drizzle is excellent, but Neon is a separate vendor; Supabase covers DB + Auth + Storage |
-| **MongoDB + Mongoose** | NoSQL is a poor fit for relational user/email data; no RLS |
-| **Firebase Firestore** | NoSQL, Google lock-in, weak typing |
+| Alternative              | Reason Rejected                                                                          |
+| ------------------------ | ---------------------------------------------------------------------------------------- |
+| **Prisma + PlanetScale** | PlanetScale MySQL-only (no foreign keys); separate infrastructure                        |
+| **Drizzle + Neon**       | Drizzle is excellent, but Neon is a separate vendor; Supabase covers DB + Auth + Storage |
+| **MongoDB + Mongoose**   | NoSQL is a poor fit for relational user/email data; no RLS                               |
+| **Firebase Firestore**   | NoSQL, Google lock-in, weak typing                                                       |
 
 ### 4.5 State Management
 
-| Alternative | Reason Rejected |
-|---|---|
+| Alternative       | Reason Rejected                                           |
+| ----------------- | --------------------------------------------------------- |
 | **Redux Toolkit** | Overkill for MVP; boilerplate; reducer-based mental model |
-| **Jotai** | Atomic model harder to organise for structured stores |
-| **Recoil** | Facebook project in maintenance mode |
-| **Valtio** | Less TypeScript-friendly |
-| **Context API** | Re-render issues with unrelated updates; does not scale |
+| **Jotai**         | Atomic model harder to organise for structured stores     |
+| **Recoil**        | Facebook project in maintenance mode                      |
+| **Valtio**        | Less TypeScript-friendly                                  |
+| **Context API**   | Re-render issues with unrelated updates; does not scale   |
 
 ### 4.6 AI Provider
 
-| Alternative | Reason Rejected |
-|---|---|
-| **OpenAI GPT-4o** | More expensive for the same task; Anthropic gives better structured output control |
-| **Google Gemini** | Less mature Node.js SDK; API less stable in the ecosystem |
-| **Vercel AI SDK** | Good option, but hides providers behind abstraction — loses control over prompts |
-| **LangChain** | Heavy, excessive abstraction for MVP |
-| **Ollama (local model)** | Cannot deploy on Vercel without a complex worker setup |
+| Alternative              | Reason Rejected                                                                    |
+| ------------------------ | ---------------------------------------------------------------------------------- |
+| **OpenAI GPT-4o**        | More expensive for the same task; Anthropic gives better structured output control |
+| **Google Gemini**        | Less mature Node.js SDK; API less stable in the ecosystem                          |
+| **Vercel AI SDK**        | Good option, but hides providers behind abstraction — loses control over prompts   |
+| **LangChain**            | Heavy, excessive abstraction for MVP                                               |
+| **Ollama (local model)** | Cannot deploy on Vercel without a complex worker setup                             |
 
 ### 4.7 Validation
 
-| Alternative | Reason Rejected |
-|---|---|
-| **Valibot** | Good (smaller bundle), but Zod has a larger integration ecosystem (RHF, tRPC, etc.) |
-| **Yup** | Older, weaker TypeScript inference |
-| **class-validator** | Requires classes — violates the "no classes" rule |
-| **Joi** | No TypeScript-first inference |
+| Alternative         | Reason Rejected                                                                     |
+| ------------------- | ----------------------------------------------------------------------------------- |
+| **Valibot**         | Good (smaller bundle), but Zod has a larger integration ecosystem (RHF, tRPC, etc.) |
+| **Yup**             | Older, weaker TypeScript inference                                                  |
+| **class-validator** | Requires classes — violates the "no classes" rule                                   |
+| **Joi**             | No TypeScript-first inference                                                       |
 
 ### 4.8 Deploy
 
-| Alternative | Reason Rejected |
-|---|---|
-| **Netlify** | Weaker Next.js App Router Edge feature support |
-| **Railway** | Good for Docker, but more expensive; no edge network |
-| **Render** | No edge, slow cold start |
-| **VPS (DigitalOcean / Hetzner)** | Requires devops work; no CDN out of the box |
-| **AWS Amplify** | Complex; frequently lags behind new Next.js versions |
+| Alternative                      | Reason Rejected                                      |
+| -------------------------------- | ---------------------------------------------------- |
+| **Netlify**                      | Weaker Next.js App Router Edge feature support       |
+| **Railway**                      | Good for Docker, but more expensive; no edge network |
+| **Render**                       | No edge, slow cold start                             |
+| **VPS (DigitalOcean / Hetzner)** | Requires devops work; no CDN out of the box          |
+| **AWS Amplify**                  | Complex; frequently lags behind new Next.js versions |
 
 ---
 
@@ -534,6 +551,7 @@ User Browser
 **Adopted stack:** Next.js 15 + TypeScript + Tailwind 4 + shadcn/ui + Supabase + Zod + Zustand + Anthropic Claude (Mock Adapter) + Context7.
 
 **Key decisions:**
+
 - Monorepo (single Next.js project) — no separate backend
 - AI Provider Pattern — mock ↔ real API without refactoring
 - RLS in Supabase — security without per-request middleware
