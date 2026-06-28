@@ -24,7 +24,10 @@ const securityHeaders = [
 ]
 
 const nextConfig: NextConfig = {
-  output: 'standalone',
+  // 'standalone' is only needed for Docker self-hosted builds.
+  // Vercel and Netlify handle their own bundling — setting it unconditionally
+  // breaks their runtimes.
+  ...(process.env.BUILD_STANDALONE === 'true' ? { output: 'standalone' as const } : {}),
   async headers() {
     return [
       {

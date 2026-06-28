@@ -1,0 +1,16 @@
+[build]
+  command = "npm ci && npm run build"
+  publish = ".next"
+
+[build.environment]
+  NODE_VERSION = "20"
+  # Public vars needed at build time — real values set in Netlify dashboard
+  NEXT_PUBLIC_SUPABASE_URL = "https://placeholder.supabase.co"
+  NEXT_PUBLIC_SUPABASE_ANON_KEY = "placeholder_anon_key"
+  NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY = "pk_placeholder"
+  NEXT_PUBLIC_APP_URL = "https://ai-email-aligator.netlify.app"
+  NEXT_PUBLIC_APP_NAME = "AI Email Generator"
+  AI_PROVIDER = "mock"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
