@@ -21,6 +21,7 @@ import { Loader2, Eye, EyeOff } from 'lucide-react'
 
 export const RegisterForm = () => {
   const [serverError, setServerError] = useState<string | null>(null)
+  const [emailSent, setEmailSent] = useState(false)
   const [isPending, startTransition] = useTransition()
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
@@ -41,8 +42,27 @@ export const RegisterForm = () => {
       const result = await registerAction(formData)
       if (!result.success) {
         setServerError(result.error)
+      } else {
+        setEmailSent(true)
       }
     })
+  }
+
+  if (emailSent) {
+    return (
+      <div className="space-y-4 text-center">
+        <div className="font-mono text-sm text-primary">✓ CHECK_YOUR_EMAIL</div>
+        <p className="font-mono text-xs text-muted-foreground">
+          {'// confirmation link sent — click it to activate your account'}
+        </p>
+        <p className="text-center font-mono text-xs text-muted-foreground">
+          Already confirmed?{' '}
+          <Link href="/login" className="text-primary hover:underline font-medium">
+            LOGIN →
+          </Link>
+        </p>
+      </div>
+    )
   }
 
   return (
