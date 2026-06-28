@@ -74,8 +74,9 @@ export const registerAction = async (formData: FormData): Promise<ActionResult<v
     return { success: false, error: 'Registration failed. Please try again.', code: 'SERVER_ERROR' }
   }
 
-  revalidatePath('/', 'layout')
-  redirect('/dashboard')
+  // Supabase requires email confirmation in production — no session yet, so we
+  // cannot redirect to /dashboard. Return success and let the form show the prompt.
+  return { success: true, data: undefined }
 }
 
 export const logoutAction = async (): Promise<void> => {
