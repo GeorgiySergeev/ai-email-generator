@@ -54,7 +54,7 @@ export const registerAction = async (formData: FormData): Promise<ActionResult<v
   }
 
   const supabase = await createServerSupabaseClient()
-  const { error } = await supabase.auth.signUp({
+  const { data, error } = await supabase.auth.signUp({
     email: parsed.data.email,
     password: parsed.data.password,
     options: {
@@ -74,8 +74,13 @@ export const registerAction = async (formData: FormData): Promise<ActionResult<v
     return { success: false, error: 'Registration failed. Please try again.', code: 'SERVER_ERROR' }
   }
 
-  // Supabase requires email confirmation in production — no session yet, so we
-  // cannot redirect to /dashboard. Return success and let the form show the prompt.
+  // If email confirmation is disabled in Supabase, a session is returned immediately.
+  if (data.session) {
+    revalidatePath('/', 'layout')
+    redirect('/dashboard')
+  }
+
+  // Email confirmation required — let the form show "check your email".
   return { success: true, data: undefined }
 }
 
